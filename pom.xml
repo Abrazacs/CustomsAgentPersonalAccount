@@ -10,7 +10,7 @@
 		<relativePath/>
 	</parent>
 
-	<groupId>ru.custom.agent.personal.account</groupId>
+	<groupId>ru.ssemenov</groupId>
 	<artifactId>CustomsAgentPersonalAccount</artifactId>
 	<version>1.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
