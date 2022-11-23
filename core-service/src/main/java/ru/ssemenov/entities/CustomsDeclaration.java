@@ -1,9 +1,9 @@
 package ru.ssemenov.entities;
 
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
+import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
@@ -11,6 +11,7 @@ import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
+import java.util.UUID;
 
 /**
  * Entity of the customs declaration
@@ -18,11 +19,25 @@ import java.time.OffsetDateTime;
 @Entity
 @Getter
 @Setter
+@Builder
 @ToString
+@AllArgsConstructor
+@NoArgsConstructor
 @Table(name = "customs_declaration")
 public class CustomsDeclaration {
     @Id
-    @Column(name = "number")
+    @NotNull
+    @GeneratedValue(generator = "UUID")
+    @GenericGenerator(
+            name = "UUID",
+            strategy = "org.hibernate.id.UUIDGenerator"
+    )
+    @ColumnDefault("random_uuid()")
+    @Column(name = "id")
+    private UUID id;
+
+    @NotNull
+    @Column(name = "number", unique = true)
     private String number;
 
     @NotNull
