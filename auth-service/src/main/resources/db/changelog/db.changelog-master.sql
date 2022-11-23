@@ -8,8 +8,8 @@ create table roles (
 );
 
 insert into roles (id, name)
-values('f3db87e9-738e-46c8-990f-30206f38131a', 'user'),
-       ('0b103c7e-9110-43cf-8236-4db3f12095c6', 'admin');
+values('f3db87e9-738e-46c8-990f-30206f38131a', 'ROLE_USER'),
+       ('0b103c7e-9110-43cf-8236-4db3f12095c6', 'ROLE_ADMIN');
 
 create table users(
     login       varchar(255)    primary key,
