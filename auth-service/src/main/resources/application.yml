@@ -1,7 +1,11 @@
+server:
+  port: 8187
+  servlet:
+    context-path: /auth
 spring:
   datasource:
     driver-class-name: org.h2.Driver
-    url: jdbc:h2:mem:mydatabase;MODE=PostgreSQL
+    url: jdbc:h2:mem:authtabase;MODE=PostgreSQL
     username: sa
     password:
   jpa:
@@ -14,4 +18,6 @@ spring:
       enabled: true
       settings:
         web-allow-others: false
-
+jwt:
+  secret: 2mflkgei234lvmjrtkj39u14690bmu3o;ijeriu6m1ubm341!@$UFNheuwiysdtuq349
+  lifetime: 3600000
