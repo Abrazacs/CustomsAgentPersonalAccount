@@ -16,8 +16,9 @@ public class GlobalExceptionsHandler {
     public ResponseEntity<AppError> handleIllegalStateException(IllegalStateException e) {
         return new ResponseEntity<>(new AppError("ILLEGAL_DATA_STATE", e.getMessage()), HttpStatus.BAD_REQUEST);
     }
+
     @ExceptionHandler
-    public ResponseEntity<AppError> handleRuntimeException(RuntimeException e) {
+    public ResponseEntity<AppError> handleRuntimeException(ResourceException e) {
         return new ResponseEntity<>(new AppError("RESOURCE_EXCEPTION", e.getMessage()), HttpStatus.BAD_REQUEST);
     }
 }

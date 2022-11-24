@@ -10,7 +10,7 @@ public interface CustomsDeclarationServices {
 
     CustomsDeclaration findById(UUID id);
 
-    Page<CustomsDeclaration> findAll(String vatCode, Integer pageNo, Integer pageSize, String sortBy);
+    Page<CustomsDeclaration> findAll(String vatCode, Integer pageNo, Integer pageSize, String sortBy, String numberPart);
 
     void addCustomsDeclaration(CustomsDeclarationDto customsDeclarationDto);
 

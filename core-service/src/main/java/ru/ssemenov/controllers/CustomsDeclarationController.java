@@ -8,7 +8,7 @@ import java.util.UUID;
 
 public interface CustomsDeclarationController {
 
-    PageDto<CustomsDeclarationDto> getAllCustomsDeclarationByVatCode(String vatCode, Integer page, Integer pageSize, String sortBy);
+    PageDto<CustomsDeclarationDto> getAllCustomsDeclarationByVatCode(String vatCode, Integer page, Integer pageSize, String sortBy, String numberPart);
 
     CustomsDeclarationDto getCustomsDeclarationById(UUID id);
 

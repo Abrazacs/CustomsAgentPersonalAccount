@@ -6,12 +6,14 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import ru.ssemenov.dtos.CustomsDeclarationDto;
 import ru.ssemenov.entities.CustomsDeclaration;
 import ru.ssemenov.exceptions.ResourceException;
 import ru.ssemenov.exceptions.ResourceNotFoundException;
 import ru.ssemenov.repositories.CustomsDeclarationRepository;
+import ru.ssemenov.repositories.specifications.CustomsDeclarationSpecifications;
 import ru.ssemenov.services.CustomsDeclarationServices;
 
 import java.util.UUID;
@@ -29,8 +31,12 @@ public class CustomsDeclarationServicesImpl implements CustomsDeclarationService
     }
 
     @Override
-    public Page<CustomsDeclaration> findAll(String vatCode, Integer pageNo, Integer pageSize, String sortBy) {
-        return customsDeclarationRepository.findAllByVatCode(vatCode, PageRequest.of(pageNo, pageSize, Sort.by(sortBy)));
+    public Page<CustomsDeclaration> findAll(String vatCode, Integer pageNo, Integer pageSize, String sortBy, String numberPart) {
+        Specification<CustomsDeclaration> spec = Specification.where(CustomsDeclarationSpecifications.equalsVatCode(vatCode));
+        if (numberPart != null) {
+            spec = spec.and(CustomsDeclarationSpecifications.numberLike(numberPart));
+        }
+        return customsDeclarationRepository.findAll(spec, PageRequest.of(pageNo, pageSize, Sort.by(sortBy)));
     }
 
     @Override

@@ -47,11 +47,12 @@ public class CustomsDeclarationControllerImpl implements CustomsDeclarationContr
             @RequestHeader @Parameter(description = "ИНН компании", required = true) String vatCode,
             @RequestParam(name = "page", defaultValue = "0", required = false) @Parameter(description = "Номер страницы") Integer page,
             @RequestParam(name = "pageSize", defaultValue = "50", required = false) @Parameter(description = "Кол-во выводимых элементов на странице") Integer pageSize,
-            @RequestParam(name = "sortBy", defaultValue = "number", required = false) @Parameter(description = "Сортировка по имени столбца") String sortBy) {
+            @RequestParam(name = "sortBy", defaultValue = "number", required = false) @Parameter(description = "Сортировка по имени столбца") String sortBy,
+            @RequestParam(name = "numberPart", required = false) @Parameter(description = "Фильтр по номеру декларации") String numberPart) {
         if (page < 1) {
             page = 1;
         }
-        Page<CustomsDeclaration> customsDeclarations = customsDeclarationServices.findAll(vatCode, page - 1, pageSize, sortBy);
+        Page<CustomsDeclaration> customsDeclarations = customsDeclarationServices.findAll(vatCode, page - 1, pageSize, sortBy, numberPart);
         return pageConverter.entityToDto(customsDeclarations.map(customsDeclarationConverter::entityToDto));
     }
 
