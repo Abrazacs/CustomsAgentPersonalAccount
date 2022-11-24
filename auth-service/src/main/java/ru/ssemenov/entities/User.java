@@ -27,7 +27,7 @@ public class User {
     private List<Role> roles;
 
     @Column(name = "company_vat")
-    private Long companyVAT;
+    private String companyVAT;
 
     @Column(name = "email")
     private String email;
