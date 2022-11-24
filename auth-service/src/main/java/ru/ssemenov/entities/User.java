@@ -5,6 +5,7 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.List;
+import java.util.UUID;
 
 
 @Entity
@@ -14,8 +15,11 @@ import java.util.List;
 public class User {
 
     @Id
-    @Column(name = "login")
-    private String login;
+    @Column(name = "id")
+    private UUID id;
+
+    @Column(name = "username")
+    private String username;
 
     @Column(name = "password")
     private String password;

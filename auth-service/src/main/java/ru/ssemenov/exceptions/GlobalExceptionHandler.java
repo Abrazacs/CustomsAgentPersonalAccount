@@ -12,6 +12,6 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 public class GlobalExceptionHandler {
     @ExceptionHandler
     public ResponseEntity<AppError> handleBadCredentials(BadCredentialsException e) {
-        return new ResponseEntity<>(new AppError("BAD_CREDENTIALS", e.getMessage()), HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(new AppError("BAD_CREDENTIALS", e.getMessage()), HttpStatus.UNAUTHORIZED);
     }
 }
