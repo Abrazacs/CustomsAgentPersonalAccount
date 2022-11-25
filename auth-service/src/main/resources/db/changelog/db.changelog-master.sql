@@ -1,6 +1,6 @@
 -- liquibase formatted sql
 
---changeset author: sergey
+-- changeset author: sergey
 
 create table roles (
     id          UUID            primary key,
@@ -12,25 +12,26 @@ values('f3db87e9-738e-46c8-990f-30206f38131a', 'ROLE_USER'),
        ('0b103c7e-9110-43cf-8236-4db3f12095c6', 'ROLE_ADMIN');
 
 create table users(
-    login       varchar(255)    primary key,
+    id          UUID            primary key,
+    username       varchar(255)    not null unique,
     password    varchar(255)    not null,
     email       varchar(255)    not null,
-    companyVAT  varchar(255)    not null
+    company_vat  varchar(255)    not null
 );
 
-insert into users (login, password, email, companyVAT)
-values ('admin', '$2a$12$i2wJXQxdTdUMK7Zg5TSrX.LLuqI0SMKeiNmP3xdF3UEeaSipB6Nqa', 'admin@admin.com', '7777777777'),
-       ('abrazacs', '$2a$12$NfP7TBABXE1TzpoTfEjlAOoFGmPAJe6HVyGc3DSjuuaUWcb6WOyC2','sergeysemenov87@gmail.com','6767676767'),
-       ('nonpostlife', '$2a$12$NfP7TBABXE1TzpoTfEjlAOoFGmPAJe6HVyGc3DSjuuaUWcb6WOyC2', 'mail@mail.com', '1234567891');
+insert into users (id,username, password, email, company_vat)
+values ('ec2aa7f4-42d5-442c-8baf-6d4cc6d15db3','admin', '$2a$12$i2wJXQxdTdUMK7Zg5TSrX.LLuqI0SMKeiNmP3xdF3UEeaSipB6Nqa', 'admin@admin.com', '7777777777'),
+       ('fa6f0504-54bd-42b1-8363-7970492e724d','abrazacs', '$2a$12$NfP7TBABXE1TzpoTfEjlAOoFGmPAJe6HVyGc3DSjuuaUWcb6WOyC2','sergeysemenov87@gmail.com','6767676767'),
+       ('9343e308-0dda-4b1a-bf8b-64819eee192e','nonpostlife', '$2a$12$NfP7TBABXE1TzpoTfEjlAOoFGmPAJe6HVyGc3DSjuuaUWcb6WOyC2', 'mail@mail.com', '1234567891');
 
 create table users_roles (
-    user_id     varchar(255)    not null references users (login),
+    user_id     varchar(255)    not null references users (id),
     role_id     varchar(255)    not null references roles (id),
     primary key (user_id, role_id)
 );
 
 insert into users_roles (user_id, role_id)
-values ('admin', 'f3db87e9-738e-46c8-990f-30206f38131a'),
-       ('admin', '0b103c7e-9110-43cf-8236-4db3f12095c6'),
-       ('abrazacs', 'f3db87e9-738e-46c8-990f-30206f38131a'),
-       ('nonpostlife', 'f3db87e9-738e-46c8-990f-30206f38131a');
+values ('ec2aa7f4-42d5-442c-8baf-6d4cc6d15db3', 'f3db87e9-738e-46c8-990f-30206f38131a'),
+       ('ec2aa7f4-42d5-442c-8baf-6d4cc6d15db3', '0b103c7e-9110-43cf-8236-4db3f12095c6'),
+       ('fa6f0504-54bd-42b1-8363-7970492e724d', 'f3db87e9-738e-46c8-990f-30206f38131a'),
+       ('9343e308-0dda-4b1a-bf8b-64819eee192e', 'f3db87e9-738e-46c8-990f-30206f38131a');
