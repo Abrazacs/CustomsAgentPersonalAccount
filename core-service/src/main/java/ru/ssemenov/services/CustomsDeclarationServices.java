@@ -4,13 +4,15 @@ import org.springframework.data.domain.Page;
 import ru.ssemenov.dtos.CustomsDeclarationDto;
 import ru.ssemenov.entities.CustomsDeclaration;
 
+import java.util.UUID;
+
 public interface CustomsDeclarationServices {
 
-    CustomsDeclaration findByNumber(String number);
+    CustomsDeclaration findById(UUID id);
 
-    Page<CustomsDeclaration> findAll(Integer pageNo, Integer pageSize, String sortBy);
+    Page<CustomsDeclaration> findAll(String vatCode, Integer pageNo, Integer pageSize, String sortBy, String numberPart);
 
-    void addCustomsDeclaration(CustomsDeclarationDto productDto);
+    void addCustomsDeclaration(CustomsDeclarationDto customsDeclarationDto);
 
-    void deleteByNumber(String number);
+    void deleteById(UUID id);
 }
