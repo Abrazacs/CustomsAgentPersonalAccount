@@ -7,10 +7,14 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import ru.ssemenov.dtos.UserDto;
 import ru.ssemenov.entities.Role;
 import ru.ssemenov.entities.User;
+import ru.ssemenov.exceptions.RegistrationException;
 import ru.ssemenov.repositories.UserRepository;
 import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -18,6 +22,7 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class UserService implements UserDetailsService {
     private UserRepository userRepository;
+    private RoleService roleService;
 
     public Optional<User> findUserByUsername (String username){
         return userRepository.findByUsername(username);
@@ -35,4 +40,25 @@ public class UserService implements UserDetailsService {
     }
 
 
+    public void addUser(UserDto userDto) {
+        if(userRepository.findByUsername(userDto.getUsername()).isPresent()) {
+            throw new RegistrationException("This login is occupied. Try to use another one");
+        }
+        if (userRepository.findByEmail(userDto.getEmail()).isPresent()){
+            throw  new RegistrationException("This email is occupied. Try to use another one");
+        }
+        User user = userDtoToUser(userDto);
+        userRepository.save(user);
+    }
+
+    private User userDtoToUser(UserDto userDto) {
+        User user = User.builder()
+                .username(userDto.getUsername())
+                .password(userDto.getPassword())
+                .email(userDto.getEmail())
+                .companyVAT(userDto.getCompanyVAT())
+                .roles(roleService.findAllByName(userDto.getRolesNames()))
+                .build();
+        return user;
+    }
 }
