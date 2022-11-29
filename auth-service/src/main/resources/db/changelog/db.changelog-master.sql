@@ -22,11 +22,11 @@ create table users(
 insert into users (id,username, password, email, company_vat)
 values ('ec2aa7f4-42d5-442c-8baf-6d4cc6d15db3','admin', '$2a$12$i2wJXQxdTdUMK7Zg5TSrX.LLuqI0SMKeiNmP3xdF3UEeaSipB6Nqa', 'admin@admin.com', '7777777777'),
        ('fa6f0504-54bd-42b1-8363-7970492e724d','abrazacs', '$2a$12$NfP7TBABXE1TzpoTfEjlAOoFGmPAJe6HVyGc3DSjuuaUWcb6WOyC2','sergeysemenov87@gmail.com','6767676767'),
-       ('9343e308-0dda-4b1a-bf8b-64819eee192e','nonpostlife', '$2a$12$NfP7TBABXE1TzpoTfEjlAOoFGmPAJe6HVyGc3DSjuuaUWcb6WOyC2', 'mail@mail.com', '1234567891');
+       ('9343e308-0dda-4b1a-bf8b-64819eee192e','nonepostlife', '$2a$12$NfP7TBABXE1TzpoTfEjlAOoFGmPAJe6HVyGc3DSjuuaUWcb6WOyC2', 'mail@mail.com', '1234567891');
 
 create table users_roles (
-    user_id     varchar(255)    not null references users (id),
-    role_id     varchar(255)    not null references roles (id),
+    user_id     UUID    not null references users (id),
+    role_id     UUID    not null references roles (id),
     primary key (user_id, role_id)
 );
 

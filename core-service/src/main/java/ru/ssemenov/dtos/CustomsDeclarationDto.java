@@ -15,12 +15,12 @@ import java.util.UUID;
 @Getter
 @Setter
 @Builder
+@ToString
 @AllArgsConstructor
 public class CustomsDeclarationDto implements Serializable {
     @Schema(description = "ID декларации", required = true, example = "684e4ea4-cac9-4b33-843e-d26274ff9f7e")
     private final UUID id;
 
-    @NotNull
     @Schema(description = "Номер декларации", required = true, example = "10226010/220211/0003344")
     private final String number;
 

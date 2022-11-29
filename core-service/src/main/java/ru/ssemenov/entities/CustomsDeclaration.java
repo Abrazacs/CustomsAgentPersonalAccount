@@ -36,7 +36,6 @@ public class CustomsDeclaration {
     @Column(name = "id")
     private UUID id;
 
-    @NotNull
     @Column(name = "number", unique = true)
     private String number;
 
