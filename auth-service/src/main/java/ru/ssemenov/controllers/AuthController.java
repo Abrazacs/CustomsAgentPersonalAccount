@@ -12,8 +12,11 @@ import ru.ssemenov.dtos.JwtRequest;
 import ru.ssemenov.dtos.JwtResponse;
 import ru.ssemenov.dtos.UserDto;
 import ru.ssemenov.entities.User;
+import ru.ssemenov.exceptions.DeleteException;
 import ru.ssemenov.services.UserService;
 import ru.ssemenov.utils.JwtTokenUtil;
+
+import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
@@ -41,5 +44,16 @@ public class AuthController {
             @RequestBody @Parameter(description = "Данные по пользователю", required = true) UserDto userDto) {
         userService.addUser(vatCode, userDto);
         return new ResponseEntity<>(String.format("Пользователь %s зарегистрирован!", userDto.getUsername()), HttpStatus.OK);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteUserById(
+            @PathVariable @Parameter(description = "Идентификатор пользователя", required = true) UUID id) {
+        try {
+            userService.deleteUser(id);
+        } catch (DeleteException dex) {
+            return new ResponseEntity<>(String.format("Пользователь %s удален!", id), HttpStatus.NO_CONTENT);
+        }
+        return new ResponseEntity<>(String.format("Пользователь %s удален!", id), HttpStatus.NO_CONTENT);
     }
 }

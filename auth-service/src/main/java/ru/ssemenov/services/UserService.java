@@ -11,11 +11,13 @@ import org.springframework.stereotype.Service;
 import ru.ssemenov.dtos.UserDto;
 import ru.ssemenov.entities.Role;
 import ru.ssemenov.entities.User;
+import ru.ssemenov.exceptions.DeleteException;
 import ru.ssemenov.exceptions.RegistrationException;
 import ru.ssemenov.repositories.UserRepository;
 
 import java.util.Collection;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -50,6 +52,13 @@ public class UserService implements UserDetailsService {
         }
         User user = userDtoToUser(vatCode, userDto);
         userRepository.save(user);
+    }
+
+    public void deleteUser(UUID id) {
+        if (userRepository.findById(id).isPresent()) {
+            userRepository.deleteById(id);
+        }
+        throw new DeleteException("No entry found with this id");
     }
 
     private User userDtoToUser(String vatCode, UserDto userDto) {
