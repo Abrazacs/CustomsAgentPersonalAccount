@@ -3,6 +3,7 @@ package ru.ssemenov.services.impl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -41,6 +42,8 @@ public class CustomsDeclarationServicesImpl implements CustomsDeclarationService
 
     @Override
     public void addCustomsDeclaration(CustomsDeclarationDto customsDeclarationDto) {
+        UUID trace = UUID.randomUUID();
+        log.info(String.format("Start save declaration declarationDto=%s, traceId=%s", customsDeclarationDto, trace));
         CustomsDeclaration customsDeclaration = CustomsDeclaration.builder()
                 .number(customsDeclarationDto.getNumber())
                 .status(customsDeclarationDto.getStatus())
@@ -53,15 +56,23 @@ public class CustomsDeclarationServicesImpl implements CustomsDeclarationService
                 .build();
         try {
             customsDeclarationRepository.save(customsDeclaration);
+            log.info(String.format("Declaration successfully saved, traceId=%s", trace));
         } catch (DataIntegrityViolationException e) {
-            log.warn(e.getRootCause() + " " + e.getMessage());
+            log.error(String.format("Error save new declaration, error=%s, traceId=%s", e.getMessage(), trace));
             throw new ResourceException("Декларация с number:" + customsDeclarationDto.getNumber() + " уже существует!");
         }
     }
 
     @Override
     public void deleteById(UUID id) {
-        findById(id);
-        customsDeclarationRepository.deleteById(id);
+        UUID trace = UUID.randomUUID();
+        log.info(String.format("Start delete declaration id=%s, traceId=%s", id, trace));
+        try {
+            customsDeclarationRepository.deleteById(id);
+        } catch (EmptyResultDataAccessException e) {
+            log.error(String.format("Error delete declaration with id=%s, error=%s, traceId=%s", id, e.getMessage(), trace));
+            throw new ResourceException("Декларация с id:" + id + " не существует!");
+        }
+        log.info(String.format("Declaration successfully deleted, traceId=%s", trace));
     }
 }

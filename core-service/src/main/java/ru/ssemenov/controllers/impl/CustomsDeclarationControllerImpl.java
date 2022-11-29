@@ -88,7 +88,7 @@ public class CustomsDeclarationControllerImpl implements CustomsDeclarationContr
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<String> addNewCustomsDeclaration(@RequestBody @Parameter(description = "Данные по таможенной декларации", required = true) CustomsDeclarationDto customsDeclarationDto) {
         customsDeclarationServices.addCustomsDeclaration(customsDeclarationDto);
-        return new ResponseEntity<>("Декларация " + customsDeclarationDto.getNumber() + " была успешно добавлена", HttpStatus.CREATED);
+        return new ResponseEntity<>("Декларация была успешно добавлена", HttpStatus.CREATED);
     }
 
     @Override

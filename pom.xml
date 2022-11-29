@@ -11,7 +11,7 @@
 	</parent>
 
 	<groupId>ru.ssemenov</groupId>
-	<artifactId>CustomsAgentPersonalAccount</artifactId>
+	<artifactId>customs-agent-personal-account</artifactId>
 	<version>1.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
