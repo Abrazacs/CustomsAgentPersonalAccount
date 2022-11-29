@@ -10,8 +10,14 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 @ControllerAdvice
 
 public class GlobalExceptionHandler {
+
     @ExceptionHandler
     public ResponseEntity<AppError> handleBadCredentials(BadCredentialsException e) {
         return new ResponseEntity<>(new AppError("BAD_CREDENTIALS", e.getMessage()), HttpStatus.UNAUTHORIZED);
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<AppError> handleRegistrationException(RegistrationException e){
+        return new ResponseEntity<>(new AppError("CHECK_USERNAME", e.getMessage()), HttpStatus.BAD_REQUEST);
     }
 }
