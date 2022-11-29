@@ -1,0 +1,32 @@
+<configuration>
+    <property name="HOME_LOG" value="./log/ru/ssemenov/customs/customs-core.log"/>
+    <appender name="FILE-ROLLING" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${HOME_LOG}</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>/var/log/ru/ssemenov/customs/app.%d{yyyy-MM-dd}.%i.log.gz</fileNamePattern>
+            <maxFileSize>10MB</maxFileSize>
+            <totalSizeCap>1GB</totalSizeCap>
+            <maxHistory>60</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <pattern>%d %p %c{1.} [%t] %m%n</pattern>
+        </encoder>
+    </appender>
+    <appender name="Console" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d %p %c{1.} [%t] %m%n</pattern>
+        </encoder>
+    </appender>
+    <logger name="ru.ssemenov.services.impl.CustomsDeclarationServicesImpl" level="debug" additivity="false">
+        <appender-ref ref="FILE-ROLLING"/>
+        <appender-ref ref="Console"/>
+    </logger>
+    <root level="error">
+        <appender-ref ref="FILE-ROLLING"/>
+        <appender-ref ref="Console"/>
+    </root>
+    <root level="info">
+        <appender-ref ref="FILE-ROLLING"/>
+        <appender-ref ref="Console"/>
+    </root>
+</configuration>
