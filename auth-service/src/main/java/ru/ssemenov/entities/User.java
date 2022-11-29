@@ -1,12 +1,16 @@
 package ru.ssemenov.entities;
 
 import lombok.*;
+import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
-
 
 @Entity
 @Getter
@@ -18,9 +22,13 @@ import java.util.UUID;
 public class User {
 
     @Id
-    @Column(name = "id")
-    @GeneratedValue(generator = "uuid")
-    @GenericGenerator(name = "uuid", strategy = "org.Hibernate.id.UUIDGenerator")
+    @NotNull
+    @GeneratedValue(generator = "UUID")
+    @GenericGenerator(
+            name = "UUID",
+            strategy = "org.hibernate.id.UUIDGenerator"
+    )
+    @ColumnDefault("random_uuid()")
     private UUID id;
 
     @Column(name = "username")
@@ -41,5 +49,11 @@ public class User {
     @Column(name = "email")
     private String email;
 
+    @Column(name = "created_at")
+    @CreationTimestamp
+    private LocalDateTime createdAt;
 
+    @Column(name = "updated_at")
+    @UpdateTimestamp
+    private LocalDateTime updatedAt;
 }

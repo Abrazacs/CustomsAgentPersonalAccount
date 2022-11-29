@@ -19,13 +19,13 @@ public class JwtTokenUtil {
     @Value("${jwt.lifetime}")
     private Integer jwtLifetime;
 
-    public String generateToken(User user){
+    public String generateToken(User user) {
         Map<String, Object> claims = new HashMap<>();
         List<String> rolesList = user.getRoles().stream().map(Role::getName).collect(Collectors.toList());
         claims.put("roles", rolesList);
         claims.put("vatCode", user.getCompanyVAT());
         Date issueDate = new Date();
-        Date expireDate = new Date(issueDate.getTime()+jwtLifetime);
+        Date expireDate = new Date(issueDate.getTime() + jwtLifetime);
         return Jwts.builder()
                 .setClaims(claims)
                 .setSubject(user.getUsername())
