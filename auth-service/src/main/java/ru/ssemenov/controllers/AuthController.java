@@ -47,13 +47,9 @@ public class AuthController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteUserById(
-            @PathVariable @Parameter(description = "Идентификатор пользователя", required = true) UUID id) {
-        try {
-            userService.deleteUser(id);
-        } catch (DeleteException dex) {
-            return new ResponseEntity<>(String.format("Пользователь %s не найден!", id), HttpStatus.NO_CONTENT);
-        }
-        return new ResponseEntity<>(String.format("Пользователь %s удален!", id), HttpStatus.NO_CONTENT);
+    public ResponseEntity<String> deleteUserById(@PathVariable @Parameter(description = "Идентификатор пользователя",
+            required = true) UUID id) {
+        userService.deleteUser(id);
+        return new ResponseEntity<>(String.format("Пользователь %s удален!", id), HttpStatus.OK);
     }
 }

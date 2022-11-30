@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 @ControllerAdvice
-
 public class GlobalExceptionHandler {
 
     @ExceptionHandler
@@ -19,5 +18,10 @@ public class GlobalExceptionHandler {
     @ExceptionHandler
     public ResponseEntity<AppError> handleRegistrationException(RegistrationException e){
         return new ResponseEntity<>(new AppError("CHECK_USERNAME", e.getMessage()), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<AppError> handleDeleteException(DeleteException e) {
+        return new ResponseEntity<>(new AppError("RESOURCE_EXCEPTION", e.getMessage()), HttpStatus.NOT_FOUND);
     }
 }

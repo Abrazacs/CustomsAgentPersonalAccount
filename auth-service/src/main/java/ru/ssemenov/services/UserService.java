@@ -55,10 +55,11 @@ public class UserService implements UserDetailsService {
     }
 
     public void deleteUser(UUID id) {
-        if (userRepository.findById(id).isPresent()) {
+        try {
             userRepository.deleteById(id);
+        } catch (RuntimeException e) {
+            throw new DeleteException("No entry found with this id");
         }
-        throw new DeleteException("No entry found with this id");
     }
 
     private User userDtoToUser(String vatCode, UserDto userDto) {
