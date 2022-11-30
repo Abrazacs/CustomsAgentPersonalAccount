@@ -31,6 +31,10 @@ public class UserService implements UserDetailsService {
         return userRepository.findByUsername(username);
     }
 
+    public Optional<User> findUserByCompanyVAT(String companyVAT) {
+        return userRepository.findUserByCompanyVAT(companyVAT);
+    }
+
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = findUserByUsername(username).orElseThrow(() ->
