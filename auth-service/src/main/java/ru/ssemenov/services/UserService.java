@@ -12,10 +12,12 @@ import ru.ssemenov.dtos.UserDto;
 import ru.ssemenov.entities.Role;
 import ru.ssemenov.entities.User;
 import ru.ssemenov.exceptions.DeleteException;
+import ru.ssemenov.exceptions.NotFoundException;
 import ru.ssemenov.exceptions.RegistrationException;
 import ru.ssemenov.repositories.UserRepository;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -31,8 +33,12 @@ public class UserService implements UserDetailsService {
         return userRepository.findByUsername(username);
     }
 
-    public Optional<User> findUserByCompanyVAT(String companyVAT) {
-        return userRepository.findUserByCompanyVAT(companyVAT);
+    public List<User> findUserByCompanyVAT(String companyVAT) {
+        try {
+            return userRepository.findAllByCompanyVAT(companyVAT);
+        } catch (IllegalArgumentException e) {
+            throw new NotFoundException("No entry found with this companyVAT");
+        }
     }
 
     @Override
@@ -61,7 +67,7 @@ public class UserService implements UserDetailsService {
     public void deleteUser(UUID id) {
         try {
             userRepository.deleteById(id);
-        } catch (RuntimeException e) {
+        } catch (IllegalArgumentException e) {
             throw new DeleteException("No entry found with this id");
         }
     }
