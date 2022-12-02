@@ -12,10 +12,10 @@ import ru.ssemenov.dtos.JwtRequest;
 import ru.ssemenov.dtos.JwtResponse;
 import ru.ssemenov.dtos.UserDto;
 import ru.ssemenov.entities.User;
-import ru.ssemenov.exceptions.DeleteException;
 import ru.ssemenov.services.UserService;
 import ru.ssemenov.utils.JwtTokenUtil;
 
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -51,5 +51,10 @@ public class AuthController {
             required = true) UUID id) {
         userService.deleteUser(id);
         return new ResponseEntity<>(String.format("Пользователь %s удален!", id), HttpStatus.OK);
+    }
+
+    @GetMapping("/users")
+    public List<String> getUsersByCompanyVAT(@RequestParam @Parameter(description = "ИНН компании", required = true) String vatCode) {
+       return userService.findUsersByCompanyVAT(vatCode);
     }
 }
