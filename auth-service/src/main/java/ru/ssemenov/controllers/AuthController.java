@@ -54,7 +54,7 @@ public class AuthController {
     }
 
     @GetMapping("/users")
-    public List<String> getUserByCompanyVAT(@RequestParam @Parameter(description = "ИНН компании", required = true) String vatCode) {
+    public List<String> getUsersByCompanyVAT(@RequestParam @Parameter(description = "ИНН компании", required = true) String vatCode) {
        return userService.findUsersByCompanyVAT(vatCode);
     }
 }
