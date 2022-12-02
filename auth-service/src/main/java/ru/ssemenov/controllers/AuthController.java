@@ -16,7 +16,6 @@ import ru.ssemenov.services.UserService;
 import ru.ssemenov.utils.JwtTokenUtil;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 @RestController
@@ -54,8 +53,8 @@ public class AuthController {
         return new ResponseEntity<>(String.format("Пользователь %s удален!", id), HttpStatus.OK);
     }
 
-    @GetMapping("/user")
-    public List<User> getUserByCompanyVAT(@RequestParam @Parameter(description = "ИНН компании", required = true) String vatCode) {
-       return userService.findUserByCompanyVAT(vatCode);
+    @GetMapping("/users")
+    public List<String> getUserByCompanyVAT(@RequestParam @Parameter(description = "ИНН компании", required = true) String vatCode) {
+       return userService.findUsersByCompanyVAT(vatCode);
     }
 }

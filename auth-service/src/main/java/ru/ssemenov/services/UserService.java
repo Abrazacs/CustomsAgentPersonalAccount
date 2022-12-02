@@ -11,15 +11,11 @@ import org.springframework.stereotype.Service;
 import ru.ssemenov.dtos.UserDto;
 import ru.ssemenov.entities.Role;
 import ru.ssemenov.entities.User;
-import ru.ssemenov.exceptions.DeleteException;
 import ru.ssemenov.exceptions.NotFoundException;
 import ru.ssemenov.exceptions.RegistrationException;
 import ru.ssemenov.repositories.UserRepository;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -33,12 +29,13 @@ public class UserService implements UserDetailsService {
         return userRepository.findByUsername(username);
     }
 
-    public List<User> findUserByCompanyVAT(String companyVAT) {
-        try {
-            return userRepository.findAllByCompanyVAT(companyVAT);
-        } catch (IllegalArgumentException e) {
+    public List<String> findUsersByCompanyVAT(String companyVAT) {
+        List<String> users = new ArrayList<>();
+        userRepository.findAllByCompanyVAT(companyVAT).forEach(u -> users.add(u.getUsername()));
+        if (users.size() == 0) {
             throw new NotFoundException("No entry found with this companyVAT");
         }
+        return users;
     }
 
     @Override
@@ -68,7 +65,7 @@ public class UserService implements UserDetailsService {
         try {
             userRepository.deleteById(id);
         } catch (IllegalArgumentException e) {
-            throw new DeleteException("No entry found with this id");
+            throw new NotFoundException("No entry found with this id");
         }
     }
 

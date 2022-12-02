@@ -21,12 +21,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler
-    public ResponseEntity<AppError> handleDeleteException(DeleteException e) {
-        return new ResponseEntity<>(new AppError("RESOURCE_EXCEPTION", e.getMessage()), HttpStatus.NOT_FOUND);
-    }
-
-    @ExceptionHandler
-    public ResponseEntity<AppError> notFoundException(NotFoundException e) {
+    public ResponseEntity<AppError> handleNotFoundException(NotFoundException e) {
         return new ResponseEntity<>(new AppError("NOT_FOUND_EXCEPTION", e.getMessage()), HttpStatus.NOT_FOUND);
     }
 }
