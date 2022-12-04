@@ -6,7 +6,7 @@ CREATE TABLE customs_declaration
     id                 UUID         NOT NULL,
     number             VARCHAR(255),
     status             VARCHAR(255) NOT NULL,
-    consignee          VARCHAR(255) NOT NULL,
+    consignor          VARCHAR(255) NOT NULL,
     vat_code           VARCHAR(255) NOT NULL,
     invoice_data       VARCHAR(255) NOT NULL,
     goods_value        DECIMAL      NOT NULL,
@@ -23,7 +23,7 @@ ALTER TABLE customs_declaration
 	
 -- changeset ilyha:1669165796353-3
 insert into customs_declaration
-    (id, number, status, consignee, vat_code, invoice_data, goods_value, date_of_submission, date_of_release)
+    (id, number, status, consignor, vat_code, invoice_data, goods_value, date_of_submission, date_of_release)
 values
     ('684e4ea4-cac9-4b33-843e-d26274ff9f7e', '10226010/220211/0003344', 'RELEASE', 'Trade inc', '7777777777', 'ab-234', 120000.00, '2022-10-19T10:23:54+10:00', '2022-10-19T10:29:32+10:00'),
     ('f6f1c3fd-c6b0-43c1-a2f5-ea8e0e0fd2db', '10228010/031022/3340262', 'RELEASE', 'Trade inc', '7777777777', 'ab-235', 50000.00, '2022-10-19T10:23:54+10:00', '2022-10-19T10:29:32+10:00'),

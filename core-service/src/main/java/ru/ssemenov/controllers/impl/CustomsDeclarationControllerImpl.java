@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,6 +23,7 @@ import ru.ssemenov.services.CustomsDeclarationServices;
 
 import java.util.UUID;
 
+@Slf4j
 @RestController
 @RequestMapping("/api/v1/declarations")
 @RequiredArgsConstructor
@@ -49,6 +51,8 @@ public class CustomsDeclarationControllerImpl implements CustomsDeclarationContr
             @RequestParam(name = "pageSize", defaultValue = "50", required = false) @Parameter(description = "Кол-во выводимых элементов на странице") Integer pageSize,
             @RequestParam(name = "sortBy", defaultValue = "number", required = false) @Parameter(description = "Сортировка по имени столбца") String sortBy,
             @RequestParam(name = "numberPart", required = false) @Parameter(description = "Фильтр по номеру декларации") String numberPart) {
+        log.info("we are here. Vat code is: " + vatCode);
+
         if (page < 1) {
             page = 1;
         }

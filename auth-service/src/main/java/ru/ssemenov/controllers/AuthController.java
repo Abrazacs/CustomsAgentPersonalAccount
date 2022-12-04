@@ -8,6 +8,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.security.authentication.AuthenticationManager;
+import ru.ssemenov.dtos.ExportUserDto;
 import ru.ssemenov.dtos.JwtRequest;
 import ru.ssemenov.dtos.JwtResponse;
 import ru.ssemenov.dtos.UserDto;
@@ -29,9 +30,9 @@ public class AuthController {
 
     @PostMapping("/authenticate")
     public ResponseEntity<JwtResponse> createAuthToken(@RequestBody JwtRequest authRequest) {
-        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authRequest.getLogin(), authRequest.getPassword()));
+        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authRequest.getUsername(), authRequest.getPassword()));
 
-        User user = userService.findUserByUsername(authRequest.getLogin()).orElseThrow(
+        User user = userService.findUserByUsername(authRequest.getUsername()).orElseThrow(
                 () -> new UsernameNotFoundException("User with such login doesn't exist"));
 
         String token = jwtTokenUtil.generateToken(user);
@@ -54,7 +55,7 @@ public class AuthController {
     }
 
     @GetMapping("/users")
-    public List<String> getUsersByCompanyVAT(@RequestParam @Parameter(description = "ИНН компании", required = true) String vatCode) {
+    public List<ExportUserDto> getUsersByCompanyVAT(@RequestParam @Parameter(description = "ИНН компании", required = true) String vatCode) {
        return userService.findUsersByCompanyVAT(vatCode);
     }
 }

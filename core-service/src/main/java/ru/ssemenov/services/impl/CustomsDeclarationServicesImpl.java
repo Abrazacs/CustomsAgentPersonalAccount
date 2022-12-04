@@ -47,7 +47,7 @@ public class CustomsDeclarationServicesImpl implements CustomsDeclarationService
         CustomsDeclaration customsDeclaration = CustomsDeclaration.builder()
                 .number(customsDeclarationDto.getNumber())
                 .status(customsDeclarationDto.getStatus())
-                .consignee(customsDeclarationDto.getConsignee())
+                .consignor(customsDeclarationDto.getConsignor())
                 .vatCode(customsDeclarationDto.getVatCode())
                 .invoiceData(customsDeclarationDto.getInvoiceData())
                 .goodsValue(customsDeclarationDto.getGoodsValue())

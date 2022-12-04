@@ -1,0 +1,47 @@
+
+
+<div>
+    <p>Добро пожаловать в личный кабинет</p>
+    <p></p>
+
+    <p style="padding: 15px" >Кол-во деклараций в работе: </span {{s.inProgress}}> </p>
+    <p style="padding: 15px">% ДТ со сроком выпуска >1 дня: </span {{s.moreThanOne}}> </p>
+
+    <p></p>
+    <h3>Список ДТ</h3>
+    <p></p>
+
+    <table class="table">
+        <thead class="table-dark">
+        <tr>
+            <td>ДТ №</td>
+            <td>Статус</td>
+            <td>Грузоотправитель</td>
+            <td>Инвойс</td>
+            <td>Фактурная стоимость</td>
+            <td>Дата и время подачи ДТ</td>
+            <td>Дата и время выпуска / отказа</td>
+        </tr>
+        </thead>
+        <tbody>
+        <tr ng-repeat="d in declarationPage.items">
+            <td>{{d.number}}</td>
+            <td>{{d.status}}</td>
+            <td>{{d.consignor}}</td>
+            <td>{{d.invoiceData}}</td>
+            <td>{{d.goodsValue}}</td>
+            <td>{{d.dateOfSubmission}}</td>
+            <td>{{d.dateOfRelease}}</td>
+        </tr>
+        </tbody>
+    </table>
+
+    <nav aria-label="Page navigation">
+        <ul class="pagination">
+            <li class="page-item" ng-repeat="pageIndex in pagesList">
+                <button class="page-link" ng-click="loadProducts(pageIndex)">{{pageIndex}}</button>
+            </li>
+        </ul>
+    </nav>
+
+</div>
