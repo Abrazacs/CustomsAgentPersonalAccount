@@ -21,7 +21,7 @@ services:
         container_name: pg_updater
         image: liquibase/liquibase:4.15.0
         volumes:
-            - ./liquibase:/liquibase/changelog
+            - ./docker/liquibase:/liquibase/changelog
         command: liquibase --url="jdbc:postgresql://postgres_customs:5432/customs" --changeLogFile=./changelog/changelog_customs.sql --username=postgres --password=postgres --log-level=INFO update
         depends_on:
             postgres_customs:
