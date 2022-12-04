@@ -36,3 +36,4 @@ build/
 .jpb/
 log
 postgresql/
+*.properties

@@ -27,6 +27,7 @@
         <module>core-service</module>
         <module>personal-account-service</module>
         <module>gateway</module>
+        <module>notification-service</module>
     </modules>
 
     <dependencies>
