@@ -8,27 +8,45 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import ru.ssemenov.converters.UserDtoToUserConverter;
+import ru.ssemenov.dtos.ExportUserDto;
 import ru.ssemenov.dtos.UserDto;
 import ru.ssemenov.entities.Role;
 import ru.ssemenov.entities.User;
-import ru.ssemenov.exceptions.DeleteException;
+import ru.ssemenov.exceptions.NotFoundException;
 import ru.ssemenov.exceptions.RegistrationException;
 import ru.ssemenov.repositories.UserRepository;
 
-import java.util.Collection;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class UserService implements UserDetailsService {
     private final UserRepository userRepository;
-    private final RoleService roleService;
-    private final PasswordEncoder passwordEncoder;
+    private final UserDtoToUserConverter userDtoToUserConverter;
+
 
     public Optional<User> findUserByUsername(String username) {
         return userRepository.findByUsername(username);
+    }
+
+    public List<ExportUserDto> findUsersByCompanyVAT(String companyVAT) {
+        List<ExportUserDto> users = userRepository.findAllByCompanyVAT(companyVAT).
+                stream()
+                    .map(u ->
+                        {
+                        return ExportUserDto.builder()
+                            .username(u.getUsername())
+                            .email(u.getEmail())
+                            .build();
+                        })
+                    .collect(Collectors.toList());
+
+        if (users.isEmpty()) {
+            throw new NotFoundException("No entry found with this companyVAT");
+        }
+        return users;
     }
 
     @Override
@@ -50,25 +68,17 @@ public class UserService implements UserDetailsService {
         if (userRepository.findByEmail(userDto.getEmail()).isPresent()) {
             throw new RegistrationException("This email is occupied. Try to use another one");
         }
-        User user = userDtoToUser(vatCode, userDto);
+        User user = userDtoToUserConverter.convert(userDto, vatCode);
         userRepository.save(user);
     }
 
     public void deleteUser(UUID id) {
         try {
             userRepository.deleteById(id);
-        } catch (RuntimeException e) {
-            throw new DeleteException("No entry found with this id");
+        } catch (IllegalArgumentException e) {
+            throw new NotFoundException("No entry found with this id");
         }
     }
 
-    private User userDtoToUser(String vatCode, UserDto userDto) {
-        return User.builder()
-                .username(userDto.getUsername())
-                .password(passwordEncoder.encode(userDto.getPassword()))
-                .email(userDto.getEmail())
-                .companyVAT(vatCode)
-                .roles(roleService.findAllByNames(userDto.getRolesNames()))
-                .build();
-    }
+
 }

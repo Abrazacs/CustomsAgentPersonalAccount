@@ -43,11 +43,11 @@ public class CustomsDeclarationServicesImpl implements CustomsDeclarationService
     @Override
     public void addCustomsDeclaration(CustomsDeclarationDto customsDeclarationDto) {
         UUID trace = UUID.randomUUID();
-        log.info(String.format("Start save declaration declarationDto=%s, traceId=%s", customsDeclarationDto, trace));
+        log.info("Start save declaration declarationDto={}, traceId={}", customsDeclarationDto, trace);
         CustomsDeclaration customsDeclaration = CustomsDeclaration.builder()
                 .number(customsDeclarationDto.getNumber())
                 .status(customsDeclarationDto.getStatus())
-                .consignee(customsDeclarationDto.getConsignee())
+                .consignor(customsDeclarationDto.getConsignor())
                 .vatCode(customsDeclarationDto.getVatCode())
                 .invoiceData(customsDeclarationDto.getInvoiceData())
                 .goodsValue(customsDeclarationDto.getGoodsValue())
@@ -56,23 +56,23 @@ public class CustomsDeclarationServicesImpl implements CustomsDeclarationService
                 .build();
         try {
             customsDeclarationRepository.save(customsDeclaration);
-            log.info(String.format("Declaration successfully saved, traceId=%s", trace));
+            log.info("Declaration successfully saved, traceId={}", trace);
         } catch (DataIntegrityViolationException e) {
-            log.error(String.format("Error save new declaration, error=%s, traceId=%s", e.getMessage(), trace));
-            throw new ResourceException("Декларация с number:" + customsDeclarationDto.getNumber() + " уже существует!");
+            log.error("Error save new declaration, error={}, traceId={}", e.getMessage(), trace);
+            throw new ResourceException("Декларация с number=" + customsDeclarationDto.getNumber() + " уже существует!");
         }
     }
 
     @Override
     public void deleteById(UUID id) {
         UUID trace = UUID.randomUUID();
-        log.info(String.format("Start delete declaration id=%s, traceId=%s", id, trace));
+        log.info("Start delete declaration id={}, traceId={}", id, trace);
         try {
             customsDeclarationRepository.deleteById(id);
         } catch (EmptyResultDataAccessException e) {
-            log.error(String.format("Error delete declaration with id=%s, error=%s, traceId=%s", id, e.getMessage(), trace));
-            throw new ResourceException("Декларация с id:" + id + " не существует!");
+            log.error("Error delete declaration with id={}, error={}, traceId={}", id, e.getMessage(), trace);
+            throw new ResourceException("Декларация с id=" + id + " не существует!");
         }
-        log.info(String.format("Declaration successfully deleted, traceId=%s", trace));
+        log.info("Declaration successfully deleted, traceId={}", trace);
     }
 }

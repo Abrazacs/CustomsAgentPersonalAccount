@@ -44,8 +44,8 @@ public class CustomsDeclaration {
     private String status;
 
     @NotNull
-    @Column(name = "consignee")
-    private String consignee;
+    @Column(name = "consignor")
+    private String consignor;
 
     @NotNull
     @Column(name = "vat_Code")

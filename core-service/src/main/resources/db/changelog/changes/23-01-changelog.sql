@@ -6,7 +6,7 @@ CREATE TABLE customs_declaration
     id                 UUID         NOT NULL,
     number             VARCHAR(255),
     status             VARCHAR(255) NOT NULL,
-    consignee          VARCHAR(255) NOT NULL,
+    consignor          VARCHAR(255) NOT NULL,
     vat_code           VARCHAR(255) NOT NULL,
     invoice_data       VARCHAR(255) NOT NULL,
     goods_value        DECIMAL      NOT NULL,
