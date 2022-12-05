@@ -30,7 +30,7 @@ public class CustomsDeclarationDto implements Serializable {
 
     @NotNull
     @Schema(description = "Наименование грузоотправителя", required = true, example = "Trade inc")
-    private final String consignee;
+    private final String consignor;
 
     @NotNull
     @Schema(description = "ИНН грузополучателя", required = true, example = "7777777777")

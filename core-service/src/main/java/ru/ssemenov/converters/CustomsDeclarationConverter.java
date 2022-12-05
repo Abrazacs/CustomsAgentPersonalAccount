@@ -14,7 +14,7 @@ public class CustomsDeclarationConverter {
                 .id(c.getId())
                 .number(c.getNumber())
                 .status(c.getStatus())
-                .consignee(c.getConsignee())
+                .consignor(c.getConsignor())
                 .vatCode(c.getVatCode())
                 .invoiceData(c.getInvoiceData())
                 .goodsValue(c.getGoodsValue())

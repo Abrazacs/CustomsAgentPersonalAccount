@@ -13,7 +13,7 @@ public class RoleService {
 
     private final RoleRepository roleRepository;
 
-    List<Role> findAllByNames(List<String> names) {
+    public List<Role> findAllByNames(List<String> names) {
         return roleRepository.findAllByNameIn(names);
     }
 }
