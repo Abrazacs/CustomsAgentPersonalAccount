@@ -5,13 +5,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 
-import javax.mail.Message;
-import javax.mail.PasswordAuthentication;
-import javax.mail.Session;
-import javax.mail.Transport;
+import javax.mail.*;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
-import javax.mail.Authenticator;
+import java.io.UnsupportedEncodingException;
 import java.util.Date;
 import java.util.List;
 import java.util.Properties;
@@ -61,8 +58,8 @@ public class MailUtil {
             log.info("Message for email={} is ready, trace={}", toEmail, trace);
             Transport.send(msg);
             log.info("Mail for email={} sent successfully, trace={}", toEmail, trace);
-        } catch (Exception e) {
-            log.error("Error send mail to email={}, trace={}", toEmail, trace);
+        } catch (UnsupportedEncodingException | MessagingException e) {
+            log.error("Error send mail to email={}, error={} trace={}", toEmail, e.getMessage(), trace);
             e.printStackTrace();
         }
     }

@@ -27,6 +27,18 @@ spring:
             - name: RequestSize
               args:
                 maxSize: 1MB
+        - id: notification-service
+          uri: http://localhost:8186
+          predicates:
+            - Path=/notification/**
+          filters:
+            - StripPrefix=1
+            - PrefixPath=/customs-notification
+            - JwtAuthFilter
+            - NotForGuestsFilter
+            - name: RequestSize
+              args:
+                maxSize: 1MB
         - id: auth-service
           uri: http://localhost:8187
           predicates:

@@ -31,11 +31,11 @@ public class JwtAuthFilter extends AbstractGatewayFilterFactory<JwtAuthFilter.Co
             ServerHttpRequest request = exchange.getRequest();
             log.info("Start JwtAuthFilter, request={}, trace={}", request, trace);
             if (request.getHeaders().containsKey("username")) {
-                log.error("Invalid header username={}, trace={}", request.getHeaders().containsKey("username"), trace);
+                log.error("Invalid header username={}, trace={}", request.getHeaders().get("username"), trace);
                 return this.onError(exchange, "Invalid header username", HttpStatus.BAD_REQUEST);
             }
             if (request.getHeaders().containsKey("vatCode")) {
-                log.error("Invalid header vatCode={}, trace={}", request.getHeaders().containsKey("vatCode"), trace);
+                log.error("Invalid header vatCode={}, trace={}", request.getHeaders().get("vatCode"), trace);
                 return this.onError(exchange, "Invalid header vatCode", HttpStatus.BAD_REQUEST);
             }
 

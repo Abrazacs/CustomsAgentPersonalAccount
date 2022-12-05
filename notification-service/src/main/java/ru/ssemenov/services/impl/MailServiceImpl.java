@@ -47,7 +47,7 @@ public class MailServiceImpl implements MailService {
         List<String> emails = getMailingList(vatCode);
         if (!emails.isEmpty()) {
             log.info("Selling to addresses={}, trace={}", emails, trace);
-            mailUtil.sendEmailsToRecipients(emails, "Email title", "Hello, friend!", trace);
+            mailUtil.sendEmailsToRecipients(emails, title, body, trace);
         } else {
             log.info("Mailing list is empty by vat={}, mailing is finish, trace={}", vatCode, trace);
             throw new MailException("Список рассылки пуст! Отправка письма невозможна");
