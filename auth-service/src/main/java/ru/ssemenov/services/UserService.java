@@ -35,12 +35,10 @@ public class UserService implements UserDetailsService {
         List<ExportUserDto> users = userRepository.findAllByCompanyVAT(companyVAT).
                 stream()
                     .map(u ->
-                        {
-                        return ExportUserDto.builder()
-                            .username(u.getUsername())
-                            .email(u.getEmail())
-                            .build();
-                        })
+                            ExportUserDto.builder()
+                                .username(u.getUsername())
+                                .email(u.getEmail())
+                                .build())
                     .collect(Collectors.toList());
 
         if (users.isEmpty()) {
