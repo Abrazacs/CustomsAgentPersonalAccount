@@ -16,7 +16,7 @@ public class AppError {
     private String code;
 
     @Schema(description = "Текст ошибки", required = true,
-            example = "Декларация с id=684e4ea4-cac9-4b33-843e-d26274ff9f7e не существует!")
+            example = "This login is occupied. Try to use another one")
     private String message;
 
 }
