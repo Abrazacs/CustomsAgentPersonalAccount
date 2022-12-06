@@ -9,7 +9,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
-import ru.ssemenov.dtos.CustomsDeclarationDto;
+import org.springframework.validation.annotation.Validated;
+import ru.ssemenov.dtos.CustomsDeclarationRequest;
 import ru.ssemenov.entities.CustomsDeclaration;
 import ru.ssemenov.exceptions.ResourceException;
 import ru.ssemenov.exceptions.ResourceNotFoundException;
@@ -17,6 +18,8 @@ import ru.ssemenov.repositories.CustomsDeclarationRepository;
 import ru.ssemenov.repositories.specifications.CustomsDeclarationSpecifications;
 import ru.ssemenov.services.CustomsDeclarationServices;
 
+import javax.validation.ConstraintViolationException;
+import javax.validation.Valid;
 import java.util.UUID;
 
 @Slf4j
@@ -24,6 +27,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class CustomsDeclarationServicesImpl implements CustomsDeclarationServices {
 
+    private final String BASE_STATUS = "FILED";
     private final CustomsDeclarationRepository customsDeclarationRepository;
 
     @Override
@@ -41,25 +45,22 @@ public class CustomsDeclarationServicesImpl implements CustomsDeclarationService
     }
 
     @Override
-    public void addCustomsDeclaration(CustomsDeclarationDto customsDeclarationDto) {
+    public void addCustomsDeclaration(CustomsDeclarationRequest customsDeclarationRequest) {
         UUID trace = UUID.randomUUID();
-        log.info("Start save declaration declarationDto={}, traceId={}", customsDeclarationDto, trace);
+        log.info("Start save declaration declarationRequest={}, traceId={}", customsDeclarationRequest, trace);
         CustomsDeclaration customsDeclaration = CustomsDeclaration.builder()
-                .number(customsDeclarationDto.getNumber())
-                .status(customsDeclarationDto.getStatus())
-                .consignor(customsDeclarationDto.getConsignor())
-                .vatCode(customsDeclarationDto.getVatCode())
-                .invoiceData(customsDeclarationDto.getInvoiceData())
-                .goodsValue(customsDeclarationDto.getGoodsValue())
-                .dateOfSubmission(customsDeclarationDto.getDateOfSubmission())
-                .dateOfRelease(customsDeclarationDto.getDateOfRelease())
+                .status(BASE_STATUS)
+                .consignor(customsDeclarationRequest.getConsignor())
+                .vatCode(customsDeclarationRequest.getVatCode())
+                .invoiceData(customsDeclarationRequest.getInvoiceData())
+                .goodsValue(customsDeclarationRequest.getGoodsValue())
                 .build();
         try {
             customsDeclarationRepository.save(customsDeclaration);
             log.info("Declaration successfully saved, traceId={}", trace);
         } catch (DataIntegrityViolationException e) {
             log.error("Error save new declaration, error={}, traceId={}", e.getMessage(), trace);
-            throw new ResourceException("Декларация с number=" + customsDeclarationDto.getNumber() + " уже существует!");
+            throw new ResourceException("Декларация " + customsDeclarationRequest + " не сохранена!");
         }
     }
 
