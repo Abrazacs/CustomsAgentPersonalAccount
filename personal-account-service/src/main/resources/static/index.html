@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html ng-app="account">
 
+
 <head>
     <meta charset="utf-8">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
@@ -24,7 +25,7 @@
 
 
 <body>
-    <div class="container" ng-controller="indexController">
+    <div class="container" ng-controller="indexController" style="width: 100%">
         <div class="auth" style="text-align: center" ng-show="!isUserLoggedIn()">
             <p>Введите логин и пароль</p>
             <form class="align-middle" ng-submit="tryToAuth()">
@@ -42,14 +43,14 @@
             </form>
         </div>
 
-        <div class="btn-group" role="group">
 
-            <button class="btn btn btn-warning" href="#!/admin" ng-show="isAdmin()" > Администратор </button>
+        <div style="display: flex; justify-content: right">
+            <a href="#!/admin" class="btn btn btn-warning" ng-hide="!isAdmin()" style="margin: 10px"> Администратор </a>
+            <button class="btn btn btn-danger" ng-click="tryToLogout()" ng-show="isUserLoggedIn()" style="margin: 10px">Выйти </button>
+        </div>
 
-            <button class="btn btn btn-danger" ng-click="tryToLogout()" ng-show="isUserLoggedIn()">Выйти </button>
-
-         </div>
     </div>
+
 
     <ng-view></ng-view>
 

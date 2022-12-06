@@ -4,6 +4,8 @@
         .config(config)
         .run(run);
 
+
+
     function config($routeProvider) {
         $routeProvider
             .when('/account', {
@@ -42,6 +44,7 @@
 })();
 
 angular.module('account').controller('indexController', function ($rootScope, $scope, $http, $location, $localStorage) {
+
     $scope.tryToAuth = function () {
         $http.post('http://localhost:5555/auth/api/v1/secure/authenticate', $scope.user)
             .then(function successCallback(response) {
@@ -75,18 +78,18 @@ angular.module('account').controller('indexController', function ($rootScope, $s
     };
 
     $rootScope.isAdmin = function (){
+        let admin = false
         if($localStorage.accountUser) {
             let jwt = $localStorage.accountUser.token
             let payload = JSON.parse(atob(jwt.split('.')[1]));
             payload.roles.forEach(role => {
                 if (role === 'ROLE_ADMIN') {
-                    console.log("Neo is here")
-                    return true;
+                    admin = true
                 }
             });
-        }else{
-            return false;
         }
+        console.log(admin)
+        return admin
     }
-
 });
+

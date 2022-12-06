@@ -25,6 +25,7 @@ import java.util.stream.Collectors;
 public class UserService implements UserDetailsService {
     private final UserRepository userRepository;
     private final UserDtoToUserConverter userDtoToUserConverter;
+    private final RoleService roleService;
 
 
     public Optional<User> findUserByUsername(String username) {
@@ -34,11 +35,12 @@ public class UserService implements UserDetailsService {
     public List<ExportUserDto> findUsersByCompanyVAT(String companyVAT) {
         List<ExportUserDto> users = userRepository.findAllByCompanyVAT(companyVAT).
                 stream()
-                    .map(u ->
-                            ExportUserDto.builder()
-                                .username(u.getUsername())
-                                .email(u.getEmail())
-                                .build())
+                    .map(u -> ExportUserDto
+                            .builder()
+                            .username(u.getUsername())
+                            .email(u.getEmail())
+                            .build()
+                        )
                     .collect(Collectors.toList());
 
         if (users.isEmpty()) {
@@ -66,7 +68,8 @@ public class UserService implements UserDetailsService {
         if (userRepository.findByEmail(userDto.getEmail()).isPresent()) {
             throw new RegistrationException("This email is occupied. Try to use another one");
         }
-        User user = userDtoToUserConverter.convert(userDto, vatCode);
+        List<Role> roles = roleService.findAllByNames(userDto.getRolesNames());
+        User user = userDtoToUserConverter.convert(userDto, vatCode, roles);
         userRepository.save(user);
     }
 
