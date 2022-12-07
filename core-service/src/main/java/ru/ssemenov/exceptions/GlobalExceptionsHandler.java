@@ -3,7 +3,6 @@ package ru.ssemenov.exceptions;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -13,9 +12,7 @@ import ru.ssemenov.dtos.ValidationErrorResponse;
 import ru.ssemenov.dtos.Violation;
 
 import javax.validation.ConstraintViolationException;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -55,16 +52,16 @@ public class GlobalExceptionsHandler {
 
     @ExceptionHandler
     public ResponseEntity<AppError> handleResourceNotFoundException(ResourceNotFoundException e) {
-        return new ResponseEntity<>(new AppError("RESOURCE_NOT_FOUND", e.getMessage()), HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(new AppError(HttpStatus.NOT_FOUND.name(), e.getMessage()), HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler
     public ResponseEntity<AppError> handleIllegalStateException(IllegalStateException e) {
-        return new ResponseEntity<>(new AppError("ILLEGAL_DATA_STATE", e.getMessage()), HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(new AppError(HttpStatus.BAD_REQUEST.name(), e.getMessage()), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler
-    public ResponseEntity<AppError> handleRuntimeException(ResourceException e) {
-        return new ResponseEntity<>(new AppError("RESOURCE_EXCEPTION", e.getMessage()), HttpStatus.BAD_REQUEST);
+    public ResponseEntity<AppError> handleResourceException(ResourceException e) {
+        return new ResponseEntity<>(new AppError(HttpStatus.BAD_REQUEST.name(), e.getMessage()), HttpStatus.BAD_REQUEST);
     }
 }
