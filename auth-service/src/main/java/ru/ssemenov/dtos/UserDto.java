@@ -7,6 +7,7 @@ import lombok.Setter;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @Getter
@@ -23,10 +24,11 @@ public class UserDto {
     private String password;
 
     @Email
+    @NotBlank
     @Schema(description = "email", required = true, example = "mail@mail.com")
     private String email;
 
-    @NotBlank
+    @NotNull
     @Schema(description = "список ролей пользователя", required = true)
     private List<String> rolesNames;
 }
