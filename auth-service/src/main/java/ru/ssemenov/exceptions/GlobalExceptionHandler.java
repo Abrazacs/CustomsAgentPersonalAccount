@@ -22,6 +22,6 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler
     public ResponseEntity<AppError> handleNotFoundException(NotFoundException e) {
-        return new ResponseEntity<>(new AppError("NOT_FOUND_EXCEPTION", e.getMessage()), HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(new AppError(HttpStatus.NOT_FOUND.name(), e.getMessage()), HttpStatus.NOT_FOUND);
     }
 }
