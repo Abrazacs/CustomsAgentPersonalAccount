@@ -10,7 +10,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.ssemenov.controllers.CustomsDeclarationController;
 import ru.ssemenov.converters.CustomsDeclarationConverter;
@@ -18,6 +17,7 @@ import ru.ssemenov.converters.PageConverter;
 import ru.ssemenov.dtos.CustomsDeclarationRequest;
 import ru.ssemenov.dtos.CustomsDeclarationResponse;
 import ru.ssemenov.dtos.PageDto;
+import ru.ssemenov.dtos.ValidationErrorResponse;
 import ru.ssemenov.entities.CustomsDeclaration;
 import ru.ssemenov.exceptions.AppError;
 import ru.ssemenov.services.CustomsDeclarationServices;
@@ -84,6 +84,14 @@ public class CustomsDeclarationControllerImpl implements CustomsDeclarationContr
             responses = {
                     @ApiResponse(
                             description = "Декларация успешно создана", responseCode = "201"
+                    ),
+                    @ApiResponse(
+                            description = "Ошибка валидации данных", responseCode = "400",
+                            content = @Content(schema = @Schema(implementation = ValidationErrorResponse.class))
+                    ),
+                    @ApiResponse(
+                            description = "Ошибка сохранения декларации", responseCode = "400",
+                            content = @Content(schema = @Schema(implementation = AppError.class))
                     )
             }
     )
