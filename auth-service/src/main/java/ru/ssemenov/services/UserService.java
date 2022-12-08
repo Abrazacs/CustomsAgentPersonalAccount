@@ -37,6 +37,7 @@ public class UserService implements UserDetailsService {
                 stream()
                     .map(u -> ExportUserDto
                             .builder()
+                            .id(u.getId())
                             .username(u.getUsername())
                             .email(u.getEmail())
                             .build()

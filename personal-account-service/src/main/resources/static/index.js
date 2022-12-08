@@ -88,7 +88,6 @@ angular.module('account').controller('indexController', function ($rootScope, $s
                 }
             });
         }
-        console.log(admin)
         return admin
     }
 });
