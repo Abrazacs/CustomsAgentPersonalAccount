@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import ru.ssemenov.dtos.ValidationErrorResponse;
 import ru.ssemenov.dtos.Violation;
 
+import javax.validation.ConstraintViolationException;
+
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -47,5 +49,22 @@ public class GlobalExceptionHandler {
     @ExceptionHandler
     public ResponseEntity<AppError> handleNotFoundException(NotFoundException e) {
         return new ResponseEntity<>(new AppError(HttpStatus.NOT_FOUND.name(), e.getMessage()), HttpStatus.NOT_FOUND);
+    }
+
+    @ResponseBody
+    @ExceptionHandler(ConstraintViolationException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ValidationErrorResponse onConstraintValidationException(ConstraintViolationException e) {
+        final List<Violation> violations = e.getConstraintViolations().stream()
+                .map(
+                        violation -> new Violation(
+                                violation.getPropertyPath().toString(),
+                                violation.getMessage()
+                        )
+                )
+                .collect(Collectors.toList());
+        ValidationErrorResponse validationErrorResponse = new ValidationErrorResponse(violations);
+        log.warn(validationErrorResponse.toString());
+        return validationErrorResponse;
     }
 }

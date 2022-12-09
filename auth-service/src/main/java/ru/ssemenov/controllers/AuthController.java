@@ -75,11 +75,11 @@ public class AuthController {
             }
     )
     @PostMapping("/register")
-    public ResponseEntity<String> addNewUser(
+    public ResponseEntity<HttpStatus> addNewUser(
             @RequestHeader @Parameter(description = "ИНН компании", required = true) String vatCode,
             @Valid @RequestBody @Parameter(description = "Данные по пользователю", required = true) UserDto userDto) {
         userService.addUser(vatCode, userDto);
-        return new ResponseEntity<>(String.format("Пользователь %s зарегистрирован!", userDto.getUsername()), HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
 
@@ -87,8 +87,7 @@ public class AuthController {
             summary = "Запрос на удаление пользователя",
             responses = {
                     @ApiResponse(
-                            description = "Успешный ответ", responseCode = "200",
-                            content = @Content()
+                            description = "Успешный ответ", responseCode = "200"
                     ),
                     @ApiResponse(
                             description = "Пользователь не найден", responseCode = "404",
@@ -97,10 +96,10 @@ public class AuthController {
             }
     )
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteUserById(@PathVariable @Parameter(description = "Идентификатор пользователя",
+    public ResponseEntity<HttpStatus> deleteUserById(@PathVariable @Parameter(description = "Идентификатор пользователя",
             required = true) UUID id) {
         userService.deleteUser(id);
-        return new ResponseEntity<>(String.format("Пользователь %s удален!", id), HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @Operation(

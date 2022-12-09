@@ -35,13 +35,14 @@ public class UserService implements UserDetailsService {
     public List<ExportUserDto> findUsersByCompanyVAT(String companyVAT) {
         List<ExportUserDto> users = userRepository.findAllByCompanyVAT(companyVAT).
                 stream()
-                .map(u -> ExportUserDto
-                        .builder()
-                        .username(u.getUsername())
-                        .email(u.getEmail())
-                        .build()
-                )
-                .collect(Collectors.toList());
+                    .map(u -> ExportUserDto
+                            .builder()
+                            .id(u.getId())
+                            .username(u.getUsername())
+                            .email(u.getEmail())
+                            .build()
+                        )
+                    .collect(Collectors.toList());
 
         if (users.isEmpty()) {
             throw new NotFoundException("No entries found with this companyVAT");

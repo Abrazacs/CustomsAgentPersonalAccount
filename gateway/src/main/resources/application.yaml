@@ -13,6 +13,7 @@ spring:
             allowedMethods:
               - GET
               - POST
+              - DELETE
             allowedHeaders: "*"
       routes:
         - id: core-service
