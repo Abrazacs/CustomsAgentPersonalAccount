@@ -6,6 +6,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -25,6 +26,7 @@ import javax.validation.Valid;
 import java.util.List;
 import java.util.UUID;
 
+@Slf4j
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/secure")
@@ -33,7 +35,6 @@ public class AuthController {
     private final UserService userService;
     private final JwtTokenUtil jwtTokenUtil;
     private final AuthenticationManager authenticationManager;
-
 
     @Operation(
             summary = "Запрос на авторизацию",
@@ -49,13 +50,14 @@ public class AuthController {
             }
     )
     @PostMapping("/authenticate")
-    public ResponseEntity<JwtResponse> createAuthToken(@RequestBody JwtRequest authRequest) {
+    public ResponseEntity<JwtResponse> createAuthToken(@Valid @RequestBody JwtRequest authRequest) {
+        UUID trace = UUID.randomUUID();
+        log.info("Start authenticate user with username={}, trace={}", authRequest.getUsername(), trace);
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authRequest.getUsername(), authRequest.getPassword()));
-
         User user = userService.findUserByUsername(authRequest.getUsername()).orElseThrow(
                 () -> new UsernameNotFoundException("User with such login doesn't exist"));
-
         String token = jwtTokenUtil.generateToken(user);
+        log.info("Token for user={} generate successful, trace={}", authRequest.getUsername(), trace);
         return ResponseEntity.ok(new JwtResponse(token));
     }
 
@@ -116,6 +118,6 @@ public class AuthController {
     @GetMapping("/users")
     public List<ExportUserDto> getUsersByCompanyVAT(
             @RequestHeader @Parameter(description = "ИНН компании", required = true) String vatCode) {
-       return userService.findUsersByCompanyVAT(vatCode);
+        return userService.findUsersByCompanyVAT(vatCode);
     }
 }

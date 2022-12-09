@@ -9,7 +9,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
-import org.springframework.validation.annotation.Validated;
 import ru.ssemenov.dtos.CustomsDeclarationRequest;
 import ru.ssemenov.entities.CustomsDeclaration;
 import ru.ssemenov.exceptions.ResourceException;
@@ -18,8 +17,6 @@ import ru.ssemenov.repositories.CustomsDeclarationRepository;
 import ru.ssemenov.repositories.specifications.CustomsDeclarationSpecifications;
 import ru.ssemenov.services.CustomsDeclarationServices;
 
-import javax.validation.ConstraintViolationException;
-import javax.validation.Valid;
 import java.util.UUID;
 
 @Slf4j
@@ -70,10 +67,10 @@ public class CustomsDeclarationServicesImpl implements CustomsDeclarationService
         log.info("Start delete declaration id={}, traceId={}", id, trace);
         try {
             customsDeclarationRepository.deleteById(id);
+            log.info("Declaration with id={} successfully deleted, traceId={}", id, trace);
         } catch (EmptyResultDataAccessException e) {
             log.error("Error delete declaration with id={}, error={}, traceId={}", id, e.getMessage(), trace);
             throw new ResourceException("Декларация с id=" + id + " не существует!");
         }
-        log.info("Declaration successfully deleted, traceId={}", trace);
     }
 }
