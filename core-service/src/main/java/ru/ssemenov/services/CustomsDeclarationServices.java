@@ -4,6 +4,7 @@ import org.springframework.data.domain.Page;
 import ru.ssemenov.dtos.CustomsDeclarationRequest;
 import ru.ssemenov.entities.CustomsDeclaration;
 
+import java.io.File;
 import java.util.UUID;
 
 public interface CustomsDeclarationServices {
@@ -15,4 +16,6 @@ public interface CustomsDeclarationServices {
     void addCustomsDeclaration(CustomsDeclarationRequest customsDeclarationRequest);
 
     void deleteById(UUID id);
+
+    File export(String vatCode);
 }
