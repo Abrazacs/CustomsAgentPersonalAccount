@@ -1,0 +1,70 @@
+<div>
+    <h3>Панель администратора</h3>
+    <p></p>
+
+    <div style="display: flex; justify-content: stretch" >
+        <div class="exist" style="width: 60%; margin: 10px" >
+            <p>Список зарегистрированных пользователей компании:</p>
+            <p></p>
+
+            <table class="table">
+                <thead class="table-dark">
+                <tr>
+                    <td>Имя пользователя</td>
+                    <td>email</td>
+                    <td></td>
+                </tr>
+                </thead>
+                <tbody>
+                <tr ng-repeat="u in usersList">
+                    <td>{{u.username}}</td>
+                    <td>{{u.email}}</td>
+                    <td>
+                        <button class="btn btn-outline-warning" ng-click="removeUser(u.id)">
+                            Удалить пользователя
+                        </button>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="noobs" style="width: 40%; border-style: solid; border-color: black; margin: 10px">
+
+            <p>Форма регистрации нового пользователя</p>
+            <form class="form-check" ng-submit="addUser()">
+                <div>
+                    <input id="navLoginField" class="form-control mx-sm-3" ng-model="entrant.username" type="text"
+                           aria-describedby="inputGroup-sizing-sm" style="margin-left: 10px; width: 50%" placeholder="login">
+
+                    <input id="navPasswordField" class="form-control mx-sm-3" ng-model="entrant.password" type="password"
+                           aria-describedby="inputGroup-sizing-sm" style="margin-left: 10px; width: 50%" placeholder="password">
+
+                    <input id="navEmailField" class="form-control mx-sm-3" ng-model="entrant.email" type="email"
+                           aria-describedby="inputGroup-sizing-sm" style="margin-left: 10px; width: 50%" placeholder="email">
+                </div>
+                </p>
+                <div>
+                    <p>Выберите роли:</p>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault"
+                               ng-click="collectTheRoles('ROLE_ADMIN')">
+                        <label class="form-check-label" for="flexCheckDefault">Администратор</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked"
+                               ng-click="collectTheRoles('ROLE_USER')">
+                        <label class="form-check-label" for="flexCheckChecked">Пользователь</label>
+                    </div>
+                    </p>
+                    <button id="navLoginSubmit" class="btn btn-outline-warning btn-sm"
+                            style="margin-left: 10px;" type="submit">Добавить пользователя
+                    </button>
+                    </p>
+                </div>
+            </form>
+        </div>
+
+    </div>
+
+</div>

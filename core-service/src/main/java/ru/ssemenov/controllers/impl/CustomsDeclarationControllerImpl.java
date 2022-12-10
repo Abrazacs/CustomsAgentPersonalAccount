@@ -14,17 +14,20 @@ import org.springframework.web.bind.annotation.*;
 import ru.ssemenov.controllers.CustomsDeclarationController;
 import ru.ssemenov.converters.CustomsDeclarationConverter;
 import ru.ssemenov.converters.PageConverter;
-import ru.ssemenov.dtos.CustomsDeclarationDto;
+import ru.ssemenov.dtos.CustomsDeclarationRequest;
+import ru.ssemenov.dtos.CustomsDeclarationResponse;
 import ru.ssemenov.dtos.PageDto;
+import ru.ssemenov.dtos.ValidationErrorResponse;
 import ru.ssemenov.entities.CustomsDeclaration;
 import ru.ssemenov.exceptions.AppError;
 import ru.ssemenov.services.CustomsDeclarationServices;
 
+import javax.validation.Valid;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/api/v1/declarations")
 @RequiredArgsConstructor
+@RequestMapping("/api/v1/declarations")
 @Tag(name = "Таможенные декларации", description = "Методы по работе с таможенными декларациями")
 public class CustomsDeclarationControllerImpl implements CustomsDeclarationController {
 
@@ -38,12 +41,12 @@ public class CustomsDeclarationControllerImpl implements CustomsDeclarationContr
             responses = {
                     @ApiResponse(
                             description = "Успешный ответ", responseCode = "200",
-                            content = @Content(schema = @Schema(implementation = CustomsDeclarationDto.class))
+                            content = @Content(schema = @Schema(implementation = CustomsDeclarationResponse.class))
                     )
             }
     )
     @GetMapping
-    public PageDto<CustomsDeclarationDto> getAllCustomsDeclarationByVatCode(
+    public PageDto<CustomsDeclarationResponse> getAllCustomsDeclarationByVatCode(
             @RequestHeader @Parameter(description = "ИНН компании", required = true) String vatCode,
             @RequestParam(name = "page", defaultValue = "0", required = false) @Parameter(description = "Номер страницы") Integer page,
             @RequestParam(name = "pageSize", defaultValue = "50", required = false) @Parameter(description = "Кол-во выводимых элементов на странице") Integer pageSize,
@@ -62,7 +65,7 @@ public class CustomsDeclarationControllerImpl implements CustomsDeclarationContr
             responses = {
                     @ApiResponse(
                             description = "Успешный ответ", responseCode = "200",
-                            content = @Content(schema = @Schema(implementation = CustomsDeclarationDto.class))
+                            content = @Content(schema = @Schema(implementation = CustomsDeclarationResponse.class))
                     ),
                     @ApiResponse(
                             description = "Декларация не найдена", responseCode = "404",
@@ -71,7 +74,7 @@ public class CustomsDeclarationControllerImpl implements CustomsDeclarationContr
             }
     )
     @GetMapping("/{id}")
-    public CustomsDeclarationDto getCustomsDeclarationById(@PathVariable @Parameter(description = "Идентификатор декларации", required = true) UUID id) {
+    public CustomsDeclarationResponse getCustomsDeclarationById(@PathVariable @Parameter(description = "Идентификатор декларации", required = true) UUID id) {
         return customsDeclarationConverter.entityToDto(customsDeclarationServices.findById(id));
     }
 
@@ -81,13 +84,21 @@ public class CustomsDeclarationControllerImpl implements CustomsDeclarationContr
             responses = {
                     @ApiResponse(
                             description = "Декларация успешно создана", responseCode = "201"
+                    ),
+                    @ApiResponse(
+                            description = "Ошибка валидации данных", responseCode = "400",
+                            content = @Content(schema = @Schema(implementation = ValidationErrorResponse.class))
+                    ),
+                    @ApiResponse(
+                            description = "Ошибка сохранения декларации", responseCode = "400",
+                            content = @Content(schema = @Schema(implementation = AppError.class))
                     )
             }
     )
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<String> addNewCustomsDeclaration(@RequestBody @Parameter(description = "Данные по таможенной декларации", required = true) CustomsDeclarationDto customsDeclarationDto) {
-        customsDeclarationServices.addCustomsDeclaration(customsDeclarationDto);
+    public ResponseEntity<String> addNewCustomsDeclaration(@Valid @RequestBody @Parameter(description = "Данные по таможенной декларации", required = true) CustomsDeclarationRequest customsDeclarationRequest) {
+        customsDeclarationServices.addCustomsDeclaration(customsDeclarationRequest);
         return new ResponseEntity<>("Декларация была успешно добавлена", HttpStatus.CREATED);
     }
 

@@ -1,0 +1,4 @@
+server:
+  port: 8186
+  servlet:
+    context-path: /customs-notification

@@ -17,7 +17,7 @@ import java.util.UUID;
 @Builder
 @ToString
 @AllArgsConstructor
-public class CustomsDeclarationDto implements Serializable {
+public class CustomsDeclarationResponse implements Serializable {
     @Schema(description = "ID декларации", required = true, example = "684e4ea4-cac9-4b33-843e-d26274ff9f7e")
     private final UUID id;
 
@@ -30,7 +30,7 @@ public class CustomsDeclarationDto implements Serializable {
 
     @NotNull
     @Schema(description = "Наименование грузоотправителя", required = true, example = "Trade inc")
-    private final String consignee;
+    private final String consignor;
 
     @NotNull
     @Schema(description = "ИНН грузополучателя", required = true, example = "7777777777")
