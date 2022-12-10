@@ -15,4 +15,6 @@ public interface CustomsDeclarationServices {
     void addCustomsDeclaration(CustomsDeclarationRequest customsDeclarationRequest);
 
     void deleteById(UUID id);
+
+    String averageTimeOfReleaseByLastMonth();
 }

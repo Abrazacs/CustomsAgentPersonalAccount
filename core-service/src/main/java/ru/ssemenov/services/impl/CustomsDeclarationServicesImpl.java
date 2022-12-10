@@ -20,7 +20,14 @@ import ru.ssemenov.services.CustomsDeclarationServices;
 
 import javax.validation.ConstraintViolationException;
 import javax.validation.Valid;
-import java.util.UUID;
+import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
+import java.time.Duration;
+import java.time.LocalTime;
+import java.time.OffsetDateTime;
+import java.util.*;
+import java.util.concurrent.TimeUnit;
+import java.util.stream.IntStream;
 
 @Slf4j
 @Service
@@ -75,5 +82,14 @@ public class CustomsDeclarationServicesImpl implements CustomsDeclarationService
             throw new ResourceException("Декларация с id=" + id + " не существует!");
         }
         log.info("Declaration successfully deleted, traceId={}", trace);
+    }
+
+    @Override
+    public String averageTimeOfReleaseByLastMonth() {
+        List<CustomsDeclaration> customsDeclarations = customsDeclarationRepository.getDateOfSubmissionByLastMonth();
+        List<Long> timeList = new ArrayList<>();
+        customsDeclarations.forEach(c -> timeList.add(c.getDateOfRelease().toEpochSecond() - c.getDateOfSubmission().toEpochSecond()));
+        long averageTimeSeconds = (long) timeList.stream().mapToLong(t -> t).average().getAsDouble();
+        return LocalTime.ofSecondOfDay(averageTimeSeconds).toString();
     }
 }

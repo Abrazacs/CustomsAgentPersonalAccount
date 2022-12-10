@@ -112,4 +112,8 @@ public class CustomsDeclarationControllerImpl implements CustomsDeclarationContr
         customsDeclarationServices.deleteById(id);
         return new ResponseEntity<>("Декларация c id:" + id + " была успешно удалена", HttpStatus.OK);
     }
+    @GetMapping("/avg")
+    public String getAverageTimeOfReleaseByLastMonth() {
+        return customsDeclarationServices.averageTimeOfReleaseByLastMonth();
+    }
 }
