@@ -16,7 +16,11 @@ import ru.ssemenov.exceptions.ResourceNotFoundException;
 import ru.ssemenov.repositories.CustomsDeclarationRepository;
 import ru.ssemenov.repositories.specifications.CustomsDeclarationSpecifications;
 import ru.ssemenov.services.CustomsDeclarationServices;
+import ru.ssemenov.utils.CustomsDeclarationStatusEnum;
+import ru.ssemenov.utils.ExcelFileWriter;
 
+import java.io.File;
+import java.util.List;
 import java.util.UUID;
 
 @Slf4j
@@ -24,7 +28,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class CustomsDeclarationServicesImpl implements CustomsDeclarationServices {
 
-    private final String BASE_STATUS = "FILED";
+    private final ExcelFileWriter excelFileWriter;
     private final CustomsDeclarationRepository customsDeclarationRepository;
 
     @Override
@@ -46,7 +50,7 @@ public class CustomsDeclarationServicesImpl implements CustomsDeclarationService
         UUID trace = UUID.randomUUID();
         log.info("Start save declaration declarationRequest={}, traceId={}", customsDeclarationRequest, trace);
         CustomsDeclaration customsDeclaration = CustomsDeclaration.builder()
-                .status(BASE_STATUS)
+                .status(CustomsDeclarationStatusEnum.FILED.name())
                 .consignor(customsDeclarationRequest.getConsignor())
                 .vatCode(customsDeclarationRequest.getVatCode())
                 .invoiceData(customsDeclarationRequest.getInvoiceData())
@@ -72,5 +76,12 @@ public class CustomsDeclarationServicesImpl implements CustomsDeclarationService
             log.error("Error delete declaration with id={}, error={}, traceId={}", id, e.getMessage(), trace);
             throw new ResourceException("Декларация с id=" + id + " не существует!");
         }
+    }
+
+    @Override
+    public File export(String vatCode) {
+        Specification<CustomsDeclaration> spec = Specification.where(CustomsDeclarationSpecifications.equalsVatCode(vatCode));
+        List<CustomsDeclaration> declarations = customsDeclarationRepository.findAll(spec);
+        return excelFileWriter.createExcelFile(declarations);
     }
 }

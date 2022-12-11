@@ -24,12 +24,12 @@ public class NotForGuestsFilter extends AbstractGatewayFilterFactory<NotForGuest
         return (exchange, chain) -> {
             UUID trace = exchange.getAttribute("trace");
             ServerHttpRequest request = exchange.getRequest();
-            log.info("Start NotForGuestsFilter, request={}, trace={}", request, trace);
+            log.info("Start NotForGuestsFilter, request={}, trace={}", request.getURI().getPath(), trace);
             if (!request.getHeaders().containsKey("username")) {
                 log.error("Header username is not exist, authorization on gateway failed, error=401, trace={}", trace);
                 return this.onError(exchange, "Not for guests", HttpStatus.UNAUTHORIZED);
             }
-            log.error("Authorization on gateway is successful, trace={}", trace);
+            log.info("Authorization on gateway is successful, trace={}", trace);
             return chain.filter(exchange);
         };
     }
