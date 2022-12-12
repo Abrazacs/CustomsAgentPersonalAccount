@@ -161,9 +161,4 @@ public class CustomsDeclarationControllerImpl implements CustomsDeclarationContr
                 .headers(headers)
                 .body(resource);
     }
-
-    @GetMapping("/statistics")
-    public StatisticsDto getStatistics() {
-        return customsDeclarationServices.getStatistics();
-    }
 }

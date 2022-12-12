@@ -88,39 +88,4 @@ public class CustomsDeclarationServicesImpl implements CustomsDeclarationService
         List<CustomsDeclaration> declarations = customsDeclarationRepository.findAll(spec);
         return excelFileWriter.createExcelFile(declarations);
     }
-
-    @Override
-    public StatisticsDto getStatistics() {
-        List<CustomsDeclaration> declarations = customsDeclarationRepository.findAll();
-        return StatisticsDto
-                .builder()
-                .averageDurationOfRelease(LocalTime
-                        .ofSecondOfDay((long) declarations
-                                .stream()
-                                .filter(d -> d.getStatus().equals(CustomsDeclarationStatusEnum.RELEASE.name()))
-                                .mapToLong(declaration -> Duration
-                                        .between(declaration
-                                                .getDateOfSubmission(), declaration.getDateOfRelease())
-                                        .toSeconds())
-                                .average().orElseThrow(() -> new ResourceNotFoundException("Data not available"))))
-                .shareOfSubmittedDeclarationsBeforeNoonByMonth(Math.round(((double) declarations
-                        .stream()
-                        .filter(d -> d.getStatus().equals(CustomsDeclarationStatusEnum.FILED.name()))
-                        .filter(declaration -> declaration.getDateOfSubmission().getMonth() == LocalDateTime.now().getMonth())
-                        .filter(declaration -> declaration.getDateOfSubmission().getHour() <= 12)
-                        .count() / declarations.size() * 100) * 10.0) / 10.0)
-                .shareOfReleasedDeclarationsWithinOneDayByMonth(Math.round(((double) declarations
-                        .stream()
-                        .filter(declaration -> declaration.getDateOfSubmission().getMonth() == LocalDateTime.now().getMonth())
-                        .mapToLong(declaration -> Duration
-                                .between(declaration
-                                        .getDateOfSubmission(), declaration.getDateOfRelease())
-                                .toHours())
-                        .filter(d -> d <= 24L)
-                        .count() / declarations.size() * 100) * 10.0) / 10.0)
-                .declarationsCountInProgress(declarations
-                        .stream()
-                        .filter(declaration -> !declaration.getStatus().equals(CustomsDeclarationStatusEnum.RELEASE.name()) || !declaration.getStatus().equals(CustomsDeclarationStatusEnum.RELEASE_DENIED.name())).count())
-                .build();
-    }
 }
