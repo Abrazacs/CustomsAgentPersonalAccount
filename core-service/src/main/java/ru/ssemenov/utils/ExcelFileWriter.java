@@ -15,12 +15,11 @@ import java.util.List;
 @Component
 public class ExcelFileWriter {
 
-    public final String FONT_NAME = "Arial";
-    public final short FONT_SIZE = 14;
+    public static final String FONT_NAME = "Arial";
+    public static final short FONT_SIZE = 14;
 
     public File createExcelFile(List<CustomsDeclaration> declarations) {
         Workbook workbook = new XSSFWorkbook();
-
         Sheet sheet = workbook.createSheet("Декларации");
         sheet.setColumnWidth(0, 8000);
         sheet.setColumnWidth(1, 8000);
@@ -105,12 +104,9 @@ public class ExcelFileWriter {
         }
 
         File file = new File("temp.xlsx");
-        FileOutputStream outputStream = null;
-        try {
-            outputStream = new FileOutputStream(file.getPath());
+        try (FileOutputStream outputStream = new FileOutputStream(file.getPath())) {
             workbook.write(outputStream);
             workbook.close();
-            outputStream.close();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

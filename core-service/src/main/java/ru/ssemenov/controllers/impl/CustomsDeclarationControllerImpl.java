@@ -29,6 +29,7 @@ import javax.validation.Valid;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.net.URI;
 import java.util.UUID;
 
 @RestController
@@ -103,9 +104,11 @@ public class CustomsDeclarationControllerImpl implements CustomsDeclarationContr
     )
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<String> addNewCustomsDeclaration(@Valid @RequestBody @Parameter(description = "Данные по таможенной декларации", required = true) CustomsDeclarationRequest customsDeclarationRequest) {
-        customsDeclarationServices.addCustomsDeclaration(customsDeclarationRequest);
-        return new ResponseEntity<>("Декларация была успешно добавлена", HttpStatus.CREATED);
+    public ResponseEntity<UUID> addNewCustomsDeclaration(@Valid @RequestBody @Parameter(description = "Данные по таможенной декларации", required = true) CustomsDeclarationRequest customsDeclarationRequest) {
+        UUID id = customsDeclarationServices.addCustomsDeclaration(customsDeclarationRequest);
+        return ResponseEntity
+                .created(URI.create(String.format("/%s", id)))
+                .body(id);
     }
 
     @Override

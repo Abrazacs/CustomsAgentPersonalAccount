@@ -20,6 +20,7 @@ import ru.ssemenov.utils.CustomsDeclarationStatusEnum;
 import ru.ssemenov.utils.ExcelFileWriter;
 
 import java.io.File;
+import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -46,7 +47,7 @@ public class CustomsDeclarationServicesImpl implements CustomsDeclarationService
     }
 
     @Override
-    public void addCustomsDeclaration(CustomsDeclarationRequest customsDeclarationRequest) {
+    public UUID addCustomsDeclaration(CustomsDeclarationRequest customsDeclarationRequest) {
         UUID trace = UUID.randomUUID();
         log.info("Start save declaration declarationRequest={}, traceId={}", customsDeclarationRequest, trace);
         CustomsDeclaration customsDeclaration = CustomsDeclaration.builder()
@@ -55,10 +56,12 @@ public class CustomsDeclarationServicesImpl implements CustomsDeclarationService
                 .vatCode(customsDeclarationRequest.getVatCode())
                 .invoiceData(customsDeclarationRequest.getInvoiceData())
                 .goodsValue(customsDeclarationRequest.getGoodsValue())
+                .dateOfSubmission(OffsetDateTime.now())
                 .build();
         try {
-            customsDeclarationRepository.save(customsDeclaration);
-            log.info("Declaration successfully saved, traceId={}", trace);
+            CustomsDeclaration declaration = customsDeclarationRepository.save(customsDeclaration);
+            log.info("Declaration with id={} successfully saved, traceId={}", declaration.getId(), trace);
+            return declaration.getId();
         } catch (DataIntegrityViolationException e) {
             log.error("Error save new declaration, error={}, traceId={}", e.getMessage(), trace);
             throw new ResourceException("Декларация " + customsDeclarationRequest + " не сохранена!");
@@ -80,8 +83,7 @@ public class CustomsDeclarationServicesImpl implements CustomsDeclarationService
 
     @Override
     public File export(String vatCode) {
-        Specification<CustomsDeclaration> spec = Specification.where(CustomsDeclarationSpecifications.equalsVatCode(vatCode));
-        List<CustomsDeclaration> declarations = customsDeclarationRepository.findAll(spec);
+        List<CustomsDeclaration> declarations = customsDeclarationRepository.findAllByVatCode(vatCode);
         return excelFileWriter.createExcelFile(declarations);
     }
 }

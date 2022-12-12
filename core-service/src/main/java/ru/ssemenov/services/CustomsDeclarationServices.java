@@ -13,7 +13,7 @@ public interface CustomsDeclarationServices {
 
     Page<CustomsDeclaration> findAll(String vatCode, Integer pageNo, Integer pageSize, String sortBy, String numberPart);
 
-    void addCustomsDeclaration(CustomsDeclarationRequest customsDeclarationRequest);
+    UUID addCustomsDeclaration(CustomsDeclarationRequest customsDeclarationRequest);
 
     void deleteById(UUID id);
 
