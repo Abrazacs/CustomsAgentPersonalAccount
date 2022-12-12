@@ -41,7 +41,7 @@ public class CustomsDeclaration {
 
     @NotNull
     @Column(name = "status")
-    private String status;
+    private Status status; // Added enum localisation
 
     @NotNull
     @Column(name = "consignor")
@@ -72,4 +72,9 @@ public class CustomsDeclaration {
     @Column(name = "updated_at")
     @UpdateTimestamp
     private LocalDateTime updatedAt;
+
+    // Localisation of statuses
+    public enum Status {
+        RELEASED, CANCELED, SUBMITTED
+    }
 }
