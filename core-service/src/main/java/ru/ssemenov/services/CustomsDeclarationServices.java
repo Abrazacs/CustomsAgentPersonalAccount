@@ -2,6 +2,7 @@ package ru.ssemenov.services;
 
 import org.springframework.data.domain.Page;
 import ru.ssemenov.dtos.CustomsDeclarationRequest;
+import ru.ssemenov.dtos.StatisticsDto;
 import ru.ssemenov.entities.CustomsDeclaration;
 
 import java.io.File;
@@ -18,4 +19,7 @@ public interface CustomsDeclarationServices {
     void deleteById(UUID id);
 
     File export(String vatCode);
+
+    StatisticsDto getStatistics();
+
 }

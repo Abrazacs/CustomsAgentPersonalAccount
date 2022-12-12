@@ -20,6 +20,7 @@ import ru.ssemenov.converters.PageConverter;
 import ru.ssemenov.dtos.CustomsDeclarationRequest;
 import ru.ssemenov.dtos.CustomsDeclarationResponse;
 import ru.ssemenov.dtos.PageDto;
+import ru.ssemenov.dtos.StatisticsDto;
 import ru.ssemenov.entities.CustomsDeclaration;
 import ru.ssemenov.exceptions.AppError;
 import ru.ssemenov.exceptions.ResourceException;
@@ -159,5 +160,10 @@ public class CustomsDeclarationControllerImpl implements CustomsDeclarationContr
                 .contentType(MediaType.APPLICATION_OCTET_STREAM)
                 .headers(headers)
                 .body(resource);
+    }
+
+    @GetMapping("/statistics")
+    public StatisticsDto getStatistics() {
+        return customsDeclarationServices.getStatistics();
     }
 }

@@ -1,10 +1,12 @@
 package ru.ssemenov.dtos;
 
-import lombok.RequiredArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
 
 import java.time.LocalTime;
 
-@RequiredArgsConstructor
+@Data
+@Builder
 public class StatisticsDto {
 
     private final LocalTime averageDurationOfRelease;
