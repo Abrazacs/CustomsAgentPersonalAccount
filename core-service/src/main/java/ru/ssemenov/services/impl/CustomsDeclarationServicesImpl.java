@@ -9,8 +9,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
-import org.springframework.validation.annotation.Validated;
 import ru.ssemenov.dtos.CustomsDeclarationRequest;
+import ru.ssemenov.dtos.StatisticsResponse;
 import ru.ssemenov.entities.CustomsDeclaration;
 import ru.ssemenov.exceptions.ResourceException;
 import ru.ssemenov.exceptions.ResourceNotFoundException;
@@ -18,16 +18,9 @@ import ru.ssemenov.repositories.CustomsDeclarationRepository;
 import ru.ssemenov.repositories.specifications.CustomsDeclarationSpecifications;
 import ru.ssemenov.services.CustomsDeclarationServices;
 
-import javax.validation.ConstraintViolationException;
-import javax.validation.Valid;
-import java.math.BigDecimal;
-import java.text.SimpleDateFormat;
-import java.time.Duration;
 import java.time.LocalTime;
-import java.time.OffsetDateTime;
 import java.util.*;
-import java.util.concurrent.TimeUnit;
-import java.util.stream.IntStream;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -85,11 +78,39 @@ public class CustomsDeclarationServicesImpl implements CustomsDeclarationService
     }
 
     @Override
-    public String averageTimeOfReleaseByLastMonth() {
-        List<CustomsDeclaration> customsDeclarations = customsDeclarationRepository.getDateOfSubmissionByLastMonth();
+    public StatisticsResponse getStatistics() {
+        List<CustomsDeclaration> customsDeclarationsByLastMonth = customsDeclarationRepository.getDeclarationOfSubmissionByLastMonth();
+        List<CustomsDeclaration> totalDeclarations = customsDeclarationRepository.findAll();
+        return StatisticsResponse.builder()
+                .averageDeclarationTimeOfReleaseByLastMonth(averageDeclarationTimeOfReleaseByLastMonth(customsDeclarationsByLastMonth))
+                .percentDeclarationFirstHalfOfTheDay(percentDeclarationFirstHalfOfTheDay(customsDeclarationsByLastMonth))
+                .percentDeclarationIssuedWithOneDayOfMonth(percentDeclarationIssuedWithOneDayOfMonth(customsDeclarationsByLastMonth, totalDeclarations))
+                .quantityDeclarationInwWork(quantityDeclarationInwWork(totalDeclarations))
+                .build();
+    }
+
+    private String averageDeclarationTimeOfReleaseByLastMonth(List<CustomsDeclaration> customsDeclarationsByLastMonth) {
         List<Long> timeList = new ArrayList<>();
-        customsDeclarations.forEach(c -> timeList.add(c.getDateOfRelease().toEpochSecond() - c.getDateOfSubmission().toEpochSecond()));
+        customsDeclarationsByLastMonth.forEach(c -> timeList.add(c.getDateOfRelease().toEpochSecond() - c.getDateOfSubmission().toEpochSecond()));
         long averageTimeSeconds = (long) timeList.stream().mapToLong(t -> t).average().getAsDouble();
         return LocalTime.ofSecondOfDay(averageTimeSeconds).toString();
     }
+    
+    private Integer percentDeclarationFirstHalfOfTheDay(List<CustomsDeclaration> customsDeclarationsByLastMonth) {
+        List<CustomsDeclaration> customsDeclarationsFirstHalfOfTheDay = customsDeclarationRepository.getDeclarationOfSubmissionByLastMonth()
+                .stream().filter(c -> c.getDateOfSubmission().getHour() < 12).collect(Collectors.toList());
+        return customsDeclarationsFirstHalfOfTheDay.size()/customsDeclarationsByLastMonth.size();
+    }
+
+    private Integer percentDeclarationIssuedWithOneDayOfMonth(List<CustomsDeclaration> customsDeclarationsByLastMonth, List<CustomsDeclaration> totalDeclarations) {
+        return customsDeclarationsByLastMonth.size()/totalDeclarations.size();
+    }
+
+    private Integer quantityDeclarationInwWork(List<CustomsDeclaration> customsDeclarationsAll) {
+        List<CustomsDeclaration> customsDeclarationNoRelease = customsDeclarationsAll.stream()
+                .filter(c -> !c.getStatus().equals("RELEASE"))
+                .collect(Collectors.toList());
+        return customsDeclarationNoRelease.size()/customsDeclarationsAll.size();
+    }
+
 }

@@ -10,7 +10,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.ssemenov.controllers.CustomsDeclarationController;
 import ru.ssemenov.converters.CustomsDeclarationConverter;
@@ -18,6 +17,7 @@ import ru.ssemenov.converters.PageConverter;
 import ru.ssemenov.dtos.CustomsDeclarationRequest;
 import ru.ssemenov.dtos.CustomsDeclarationResponse;
 import ru.ssemenov.dtos.PageDto;
+import ru.ssemenov.dtos.StatisticsResponse;
 import ru.ssemenov.entities.CustomsDeclaration;
 import ru.ssemenov.exceptions.AppError;
 import ru.ssemenov.services.CustomsDeclarationServices;
@@ -112,8 +112,9 @@ public class CustomsDeclarationControllerImpl implements CustomsDeclarationContr
         customsDeclarationServices.deleteById(id);
         return new ResponseEntity<>("Декларация c id:" + id + " была успешно удалена", HttpStatus.OK);
     }
+
     @GetMapping("/avg")
-    public String getAverageTimeOfReleaseByLastMonth() {
-        return customsDeclarationServices.averageTimeOfReleaseByLastMonth();
+    public StatisticsResponse getStatisticsByLastMonth() {
+        return customsDeclarationServices.getStatistics();
     }
 }
