@@ -20,7 +20,7 @@ public class StatisticsServiceImpl implements StatisticsService {
 
     private final CustomsDeclarationRepository customsDeclarationRepository;
 
-    private final List<CustomsDeclaration> declarations;
+    private final List<CustomsDeclaration> declarations = customsDeclarationRepository.findAll();
 
     @Override
     public LocalTime getAverageDurationOfRelease() {
