@@ -44,6 +44,7 @@ public class StatisticsServiceImpl implements StatisticsService {
                         .count() / declarations.size() * 100) * 10.0) / 10.0)
                 .shareOfReleasedDeclarationsWithinOneDayByMonth(Math.round(((double) declarations
                         .stream()
+                        .filter(d -> d.getStatus().equals(CustomsDeclarationStatusEnum.RELEASE.name()))
                         .filter(declaration -> declaration.getDateOfSubmission().getMonth() == LocalDateTime.now().getMonth())
                         .mapToLong(declaration -> Duration
                                 .between(declaration
