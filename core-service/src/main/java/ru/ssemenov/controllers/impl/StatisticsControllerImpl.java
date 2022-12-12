@@ -15,6 +15,8 @@ public class StatisticsControllerImpl implements StatisticsController {
 
     private final StatisticsService statisticsService;
 
+    private final StatisticsService statisticsService;
+
     @Override
     @GetMapping
     public StatisticsDto getStatistics() {

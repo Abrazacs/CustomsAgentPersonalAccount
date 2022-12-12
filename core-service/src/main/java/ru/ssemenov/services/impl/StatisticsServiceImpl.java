@@ -11,6 +11,7 @@ import ru.ssemenov.services.StatisticsService;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.List;
 
 @Slf4j
 @Service
@@ -19,9 +20,11 @@ public class StatisticsServiceImpl implements StatisticsService {
 
     private final CustomsDeclarationRepository customsDeclarationRepository;
 
+    private final List<CustomsDeclaration> declarations;
+
     @Override
     public LocalTime getAverageDurationOfRelease() {
-        return LocalTime.ofSecondOfDay((long) customsDeclarationRepository.findAll()
+        return LocalTime.ofSecondOfDay((long) declarations
                 .stream()
                 .mapToLong(declaration -> Duration
                         .between(declaration
@@ -32,16 +35,16 @@ public class StatisticsServiceImpl implements StatisticsService {
 
     @Override
     public Double getShareOfSubmittedDeclarationsBeforeNoonByMonth() {
-        return Math.round(((double) customsDeclarationRepository.findAll()
+        return Math.round(((double) declarations
                 .stream()
                 .filter(declaration -> declaration.getDateOfSubmission().getMonth() == LocalDateTime.now().getMonth())
                 .filter(declaration -> declaration.getDateOfSubmission().getHour() <= 12)
-                .count() / customsDeclarationRepository.findAll().size() * 100) * 10.0) / 10.0;
+                .count() / declarations.size() * 100) * 10.0) / 10.0;
     }
 
     @Override
     public Double getShareOfReleasedDeclarationsWithinOneDayByMonth() {
-        return Math.round(((double) customsDeclarationRepository.findAll()
+        return Math.round(((double) declarations
                 .stream()
                 .filter(declaration -> declaration.getDateOfSubmission().getMonth() == LocalDateTime.now().getMonth())
                 .mapToLong(declaration -> Duration
@@ -49,12 +52,12 @@ public class StatisticsServiceImpl implements StatisticsService {
                                 .getDateOfSubmission(), declaration.getDateOfRelease())
                         .toHours())
                 .filter(d -> d <= 24L)
-                .count() / customsDeclarationRepository.findAll().size() * 100) * 10.0) / 10.0;
+                .count() / declarations.size() * 100) * 10.0) / 10.0;
     }
 
     @Override
     public Long getDeclarationsCountInProgress() {
-        return customsDeclarationRepository.findAll()
+        return declarations
                 .stream()
                 .filter(declaration -> declaration.getStatus() == CustomsDeclaration.Status.SUBMITTED).count();
     }
