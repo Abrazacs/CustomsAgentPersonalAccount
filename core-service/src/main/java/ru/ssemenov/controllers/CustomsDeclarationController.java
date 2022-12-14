@@ -1,18 +1,22 @@
 package ru.ssemenov.controllers;
 
+import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.ResponseEntity;
-import ru.ssemenov.dtos.CustomsDeclarationDto;
+import ru.ssemenov.dtos.CustomsDeclarationRequest;
+import ru.ssemenov.dtos.CustomsDeclarationResponse;
 import ru.ssemenov.dtos.PageDto;
 
 import java.util.UUID;
 
 public interface CustomsDeclarationController {
 
-    PageDto<CustomsDeclarationDto> getAllCustomsDeclarationByVatCode(String vatCode, Integer page, Integer pageSize, String sortBy, String numberPart);
+    PageDto<CustomsDeclarationResponse> getAllCustomsDeclarationByVatCode(String vatCode, Integer page, Integer pageSize, String sortBy, String numberPart);
 
-    CustomsDeclarationDto getCustomsDeclarationById(UUID id);
+    CustomsDeclarationResponse getCustomsDeclarationById(UUID id);
 
-    ResponseEntity<String> addNewCustomsDeclaration(CustomsDeclarationDto customsDeclarationDto);
+    ResponseEntity<String> addNewCustomsDeclaration(CustomsDeclarationRequest customsDeclarationRequest);
 
     ResponseEntity<String> deleteCustomsDeclarationById(UUID id);
+
+    ResponseEntity<InputStreamResource> exportCustomsDeclarations(String vatCode);
 }

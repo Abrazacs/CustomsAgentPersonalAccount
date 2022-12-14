@@ -13,6 +13,7 @@ spring:
             allowedMethods:
               - GET
               - POST
+              - DELETE
             allowedHeaders: "*"
       routes:
         - id: core-service
@@ -47,6 +48,7 @@ spring:
             - StripPrefix=1
             - PrefixPath=/customs-auth
             - JwtAuthFilter
+            - AdminFilter
             - name: RequestSize
               args:
                 maxSize: 1MB
