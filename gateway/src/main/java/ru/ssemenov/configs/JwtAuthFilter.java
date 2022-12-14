@@ -18,6 +18,7 @@ import java.util.UUID;
 @Component
 public class JwtAuthFilter extends AbstractGatewayFilterFactory<JwtAuthFilter.Config> {
     private final JwtUtil jwtUtil;
+    private static final String AUTH_HEADER = "Authorization";
 
     public JwtAuthFilter(JwtUtil jwtUtil) {
         super(Config.class);
@@ -66,14 +67,14 @@ public class JwtAuthFilter extends AbstractGatewayFilterFactory<JwtAuthFilter.Co
     }
 
     private String getAuthHeader(ServerHttpRequest request) {
-        return request.getHeaders().getOrEmpty("Authorization").get(0).substring(7);
+        return request.getHeaders().getOrEmpty(AUTH_HEADER).get(0).substring(7);
     }
 
     private boolean isAuthMissing(ServerHttpRequest request) {
-        if (!request.getHeaders().containsKey("Authorization")) {
+        if (!request.getHeaders().containsKey(AUTH_HEADER)) {
             return true;
         }
-        if (!request.getHeaders().getOrEmpty("Authorization").get(0).startsWith("Bearer ")) {
+        if (!request.getHeaders().getOrEmpty(AUTH_HEADER).get(0).startsWith("Bearer ")) {
             return true;
         }
         return false;
