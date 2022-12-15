@@ -2,7 +2,7 @@ angular.module('account').controller('accountController', function ($scope, $htt
 
     $scope.loadDeclarations = function (page = 1) {
         $http({
-            url: 'http://localhost:5555/core//api/v1/declarations',
+            url: 'http://localhost:5555/core/api/v1/declarations',
             method: 'GET',
             params: {
                 page: page,
@@ -11,7 +11,7 @@ angular.module('account').controller('accountController', function ($scope, $htt
             $scope.declarationPage = response.data;
             $scope.generatePagesList($scope.declarationPage.totalPages);
         });
-    };
+    }
 
     $scope.generatePagesList = function (totalPages) {
         out = [];
@@ -21,6 +21,6 @@ angular.module('account').controller('accountController', function ($scope, $htt
         $scope.pagesList = out;
     }
 
-    $scope.loadDeclarations();
+    $scope.loadDeclarations()
 
 });

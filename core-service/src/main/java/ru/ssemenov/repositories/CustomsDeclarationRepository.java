@@ -16,6 +16,8 @@ import java.util.UUID;
 public interface CustomsDeclarationRepository extends JpaRepository<CustomsDeclaration, UUID>, JpaSpecificationExecutor<CustomsDeclaration> {
     Optional<CustomsDeclaration> findById(UUID id);
 
+    List<CustomsDeclaration> findAllByVatCode(String vatCode);
+
     @Transactional
     void deleteById(UUID id);
 

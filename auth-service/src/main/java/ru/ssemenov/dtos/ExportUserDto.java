@@ -7,11 +7,17 @@ import lombok.Setter;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import java.util.UUID;
 
 @Getter
 @Setter
 @Builder
 public class ExportUserDto {
+
+    @NotNull
+    @Schema(description = "идентификатор пользователя")
+    private UUID id;
 
     @NotBlank
     @Schema(description = "логин", required = true)

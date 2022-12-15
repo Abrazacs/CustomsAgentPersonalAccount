@@ -5,6 +5,7 @@ import ru.ssemenov.dtos.CustomsDeclarationRequest;
 import ru.ssemenov.dtos.StatisticsResponse;
 import ru.ssemenov.entities.CustomsDeclaration;
 
+import java.io.File;
 import java.util.UUID;
 
 public interface CustomsDeclarationServices {
@@ -13,9 +14,12 @@ public interface CustomsDeclarationServices {
 
     Page<CustomsDeclaration> findAll(String vatCode, Integer pageNo, Integer pageSize, String sortBy, String numberPart);
 
-    void addCustomsDeclaration(CustomsDeclarationRequest customsDeclarationRequest);
+    UUID addCustomsDeclaration(CustomsDeclarationRequest customsDeclarationRequest);
 
     void deleteById(UUID id);
 
     StatisticsResponse getStatistics();
+
+    File export(String vatCode);
+
 }

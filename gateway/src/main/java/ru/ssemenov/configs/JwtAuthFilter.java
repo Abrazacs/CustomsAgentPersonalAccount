@@ -17,11 +17,12 @@ import java.util.UUID;
 @Slf4j
 @Component
 public class JwtAuthFilter extends AbstractGatewayFilterFactory<JwtAuthFilter.Config> {
-    @Autowired
-    private JwtUtil jwtUtil;
+    private final JwtUtil jwtUtil;
+    private static final String AUTH_HEADER = "Authorization";
 
-    public JwtAuthFilter() {
+    public JwtAuthFilter(JwtUtil jwtUtil) {
         super(Config.class);
+        this.jwtUtil = jwtUtil;
     }
 
     @Override
@@ -29,7 +30,7 @@ public class JwtAuthFilter extends AbstractGatewayFilterFactory<JwtAuthFilter.Co
         return (exchange, chain) -> {
             UUID trace = UUID.randomUUID();
             ServerHttpRequest request = exchange.getRequest();
-            log.info("Start JwtAuthFilter, request={}, trace={}", request, trace);
+            log.info("Start JwtAuthFilter, request={}, trace={}", request.getURI().getPath(), trace);
             if (request.getHeaders().containsKey("username")) {
                 log.error("Invalid header username={}, trace={}", request.getHeaders().get("username"), trace);
                 return this.onError(exchange, "Invalid header username", HttpStatus.BAD_REQUEST);
@@ -40,15 +41,16 @@ public class JwtAuthFilter extends AbstractGatewayFilterFactory<JwtAuthFilter.Co
             }
 
             if (!isAuthMissing(request)) {
-                log.info("Authorization header is provided trace={}", trace);
+                log.info("Authorization header is provided, trace={}", trace);
                 final String token = getAuthHeader(request);
                 if (jwtUtil.isInvalid(token)) {
                     log.error("Authorization header is invalid={}, trace={}", token, trace);
                     return this.onError(exchange, "Authorization header is invalid", HttpStatus.UNAUTHORIZED);
                 }
+                log.info("Populate request with headers, trace={}", trace);
                 populateRequestWithHeaders(exchange, token);
             } else {
-                log.info("Authorization header is not provided, go to NotForGuestsFilter, trace={}", trace);
+                log.info("Authorization header is not provided, trace={}", trace);
             }
             exchange.getAttributes().put("trace", trace);
             return chain.filter(exchange);
@@ -65,14 +67,14 @@ public class JwtAuthFilter extends AbstractGatewayFilterFactory<JwtAuthFilter.Co
     }
 
     private String getAuthHeader(ServerHttpRequest request) {
-        return request.getHeaders().getOrEmpty("Authorization").get(0).substring(7);
+        return request.getHeaders().getOrEmpty(AUTH_HEADER).get(0).substring(7);
     }
 
     private boolean isAuthMissing(ServerHttpRequest request) {
-        if (!request.getHeaders().containsKey("Authorization")) {
+        if (!request.getHeaders().containsKey(AUTH_HEADER)) {
             return true;
         }
-        if (!request.getHeaders().getOrEmpty("Authorization").get(0).startsWith("Bearer ")) {
+        if (!request.getHeaders().getOrEmpty(AUTH_HEADER).get(0).startsWith("Bearer ")) {
             return true;
         }
         return false;
