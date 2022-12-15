@@ -109,7 +109,7 @@ public class CustomsDeclarationServicesImpl implements CustomsDeclarationService
         long countCustomsDeclarationNoRelease = customsDeclarationsAll.stream()
                 .filter(c -> !c.getStatus().equals("RELEASE"))
                 .filter(c -> !c.getStatus().equals("RELEASE_DENIED"))
-                .collect(Collectors.toList()).stream().count();
+                .count();
         return (int) countCustomsDeclarationNoRelease/customsDeclarationsAll.size();
     }
 
