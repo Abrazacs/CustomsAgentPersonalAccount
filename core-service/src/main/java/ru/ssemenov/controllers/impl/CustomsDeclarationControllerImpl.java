@@ -131,11 +131,10 @@ public class CustomsDeclarationControllerImpl implements CustomsDeclarationContr
         return new ResponseEntity<>("Декларация c id:" + id + " была успешно удалена", HttpStatus.OK);
     }
 
-CS-repository-002_CS-service-002_CS-controller-002
     @GetMapping("/statistic")
     public StatisticsResponse getStatisticsByLastMonth() {
         return customsDeclarationServices.getStatistics();
-
+    }
 
     @Override
     @Operation(
