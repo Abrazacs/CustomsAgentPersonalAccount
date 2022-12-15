@@ -113,7 +113,7 @@ public class CustomsDeclarationControllerImpl implements CustomsDeclarationContr
         return new ResponseEntity<>("Декларация c id:" + id + " была успешно удалена", HttpStatus.OK);
     }
 
-    @GetMapping("/avg")
+    @GetMapping("/statistic")
     public StatisticsResponse getStatisticsByLastMonth() {
         return customsDeclarationServices.getStatistics();
     }
