@@ -20,6 +20,7 @@ import ru.ssemenov.converters.PageConverter;
 import ru.ssemenov.dtos.CustomsDeclarationRequest;
 import ru.ssemenov.dtos.CustomsDeclarationResponse;
 import ru.ssemenov.dtos.PageDto;
+import ru.ssemenov.dtos.StatisticsResponse;
 import ru.ssemenov.entities.CustomsDeclaration;
 import ru.ssemenov.exceptions.AppError;
 import ru.ssemenov.exceptions.ResourceException;
@@ -129,6 +130,11 @@ public class CustomsDeclarationControllerImpl implements CustomsDeclarationContr
         customsDeclarationServices.deleteById(id);
         return new ResponseEntity<>("Декларация c id:" + id + " была успешно удалена", HttpStatus.OK);
     }
+
+CS-repository-002_CS-service-002_CS-controller-002
+    @GetMapping("/statistic")
+    public StatisticsResponse getStatisticsByLastMonth() {
+        return customsDeclarationServices.getStatistics();
 
 
     @Override
