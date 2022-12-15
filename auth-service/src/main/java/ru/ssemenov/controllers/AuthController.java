@@ -78,7 +78,9 @@ public class AuthController {
     public ResponseEntity<HttpStatus> addNewUser(
             @RequestHeader @Parameter(description = "ИНН компании", required = true) String vatCode,
             @Valid @RequestBody @Parameter(description = "Данные по пользователю", required = true) UserDto userDto) {
+        UUID trace = UUID.randomUUID();
         userService.addUser(vatCode, userDto);
+        log.info("User={} have been created, trace={}", userDto.getUsername(), trace);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
@@ -95,10 +97,13 @@ public class AuthController {
                     )
             }
     )
+
     @DeleteMapping("/{id}")
     public ResponseEntity<HttpStatus> deleteUserById(@PathVariable @Parameter(description = "Идентификатор пользователя",
             required = true) UUID id) {
+        UUID trace = UUID.randomUUID();
         userService.deleteUser(id);
+        log.info("User with id={} have been deleted, trace={}",id, trace);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
