@@ -18,7 +18,7 @@ public interface CustomsDeclarationServices {
 
     void deleteById(UUID id);
 
-    StatisticsResponse getStatistics();
+    StatisticsResponse getStatistics(String vatCode);
 
     File export(String vatCode);
 

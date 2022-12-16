@@ -23,11 +23,12 @@ import ru.ssemenov.utils.ExcelFileWriter;
 
 import java.time.LocalTime;
 import java.util.*;
-import java.util.stream.Collectors;
 import java.io.File;
 import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.UUID;
+
+import static java.util.function.Predicate.not;
 
 
 @Slf4j
@@ -94,39 +95,63 @@ public class CustomsDeclarationServicesImpl implements CustomsDeclarationService
     }
 
     @Override
-    public StatisticsResponse getStatistics() {
-        List<CustomsDeclaration> customsDeclarationsByLastMonth = customsDeclarationRepository.getDeclarationOfSubmissionByLastMonth();
-        List<CustomsDeclaration> totalDeclarations = customsDeclarationRepository.findAll();
+    public StatisticsResponse getStatistics(String vatCode) {
+        List<CustomsDeclaration> totalDeclarations = customsDeclarationRepository.findAllByVatCode(vatCode);
+        if(totalDeclarations.isEmpty()){
+            return buildZeroStatistic();
+        }
+        List<CustomsDeclaration> customsDeclarationsByLastMonth = customsDeclarationRepository.getDeclarationOfSubmissionByLastMonth(vatCode);
+        if(customsDeclarationsByLastMonth.isEmpty()){
+            return buildZeroStatistic();
+        }
         return StatisticsResponse.builder()
                 .averageDeclarationTimeOfReleaseByLastMonth(averageDeclarationTimeOfReleaseByLastMonth(customsDeclarationsByLastMonth))
-                .percentDeclarationFirstHalfOfTheDay(percentDeclarationFirstHalfOfTheDay(customsDeclarationsByLastMonth.size()))
+                .percentDeclarationFirstHalfOfTheDay(percentDeclarationFirstHalfOfTheDay(customsDeclarationsByLastMonth))
                 .percentDeclarationIssuedWithOneDayOfMonth(percentDeclarationIssuedWithOneDayOfMonth(customsDeclarationsByLastMonth, totalDeclarations))
-                .quantityDeclarationInwWork(quantityDeclarationInwWork(totalDeclarations))
+                .quantityDeclarationInwWork(quantityDeclarationInWork(totalDeclarations))
                 .build();
     }
 
+
     private String averageDeclarationTimeOfReleaseByLastMonth(List<CustomsDeclaration> customsDeclarationsByLastMonth) {
-        OptionalDouble averageTimeSeconds = customsDeclarationsByLastMonth.stream().map(c -> c.getDateOfRelease().toEpochSecond() - c.getDateOfSubmission().toEpochSecond())
-                .mapToLong(t -> t).average();
-        return LocalTime.ofSecondOfDay((long) averageTimeSeconds.getAsDouble()).toString();
+        OptionalDouble averageTimeSeconds = customsDeclarationsByLastMonth.stream()
+                .filter(c->c.getDateOfRelease()==null)
+                .map(c -> c.getDateOfRelease().toEpochSecond() - c.getDateOfSubmission().toEpochSecond())
+                .mapToLong(t -> t)
+                .average();
+        if(averageTimeSeconds.isPresent()) {
+            return LocalTime.ofSecondOfDay((long) averageTimeSeconds.getAsDouble()).toString();
+        }else {
+            return "N/A";
+        }
     }
     
-    private Integer percentDeclarationFirstHalfOfTheDay(int countCustomsDeclarationsByLastMonth) {
-        long countCustomDeclaration = customsDeclarationRepository.getDeclarationOfSubmissionByLastMonth()
-                .stream().filter(c -> c.getDateOfSubmission().getHour() < 12).collect(Collectors.toList()).stream().count();
-        return (int) countCustomDeclaration/countCustomsDeclarationsByLastMonth;
+    private Integer percentDeclarationFirstHalfOfTheDay(List<CustomsDeclaration> customsDeclarationsByLastMonth) {
+        long countCustomDeclaration = customsDeclarationsByLastMonth.stream()
+                .filter(c -> c.getDateOfSubmission().getHour() < 12)
+                .count();
+        return (int) countCustomDeclaration/customsDeclarationsByLastMonth.size();
     }
 
-    private Integer percentDeclarationIssuedWithOneDayOfMonth(List<CustomsDeclaration> customsDeclarationsByLastMonth, List<CustomsDeclaration> totalDeclarations) {
+    private Integer percentDeclarationIssuedWithOneDayOfMonth(List<CustomsDeclaration> customsDeclarationsByLastMonth,
+                                                              List<CustomsDeclaration> totalDeclarations) {
         return customsDeclarationsByLastMonth.size()/totalDeclarations.size();
     }
 
-    private Integer quantityDeclarationInwWork(List<CustomsDeclaration> customsDeclarationsAll) {
+    private Integer quantityDeclarationInWork(List<CustomsDeclaration> customsDeclarationsAll) {
         long countCustomsDeclarationNoRelease = customsDeclarationsAll.stream()
-                .filter(c -> !c.getStatus().equals("RELEASE"))
-                .filter(c -> !c.getStatus().equals("RELEASE_DENIED"))
+                .filter(not(c -> c.getStatus().equals("RELEASE") || c.getStatus().equals("RELEASE_DENIED")))
                 .count();
         return (int) countCustomsDeclarationNoRelease/customsDeclarationsAll.size();
+    }
+
+    private StatisticsResponse buildZeroStatistic() {
+        return StatisticsResponse.builder()
+                .averageDeclarationTimeOfReleaseByLastMonth("N/A")
+                .percentDeclarationFirstHalfOfTheDay(0)
+                .percentDeclarationIssuedWithOneDayOfMonth(0)
+                .quantityDeclarationInwWork(0)
+                .build();
     }
 
 }

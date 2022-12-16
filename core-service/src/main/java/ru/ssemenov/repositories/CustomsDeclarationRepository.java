@@ -21,7 +21,7 @@ public interface CustomsDeclarationRepository extends JpaRepository<CustomsDecla
     @Transactional
     void deleteById(UUID id);
 
-    @Query(value = "select * from CUSTOMS_DECLARATION where MONTH(DATE_OF_SUBMISSION) >= MONTH(now()) - 1",
+    @Query(value = "select * from CUSTOMS_DECLARATION c where MONTH(DATE_OF_SUBMISSION) >= MONTH(now()) - 1 AND c.vat_code =:vatCode",
             nativeQuery = true)
-    List<CustomsDeclaration> getDeclarationOfSubmissionByLastMonth();
+    List<CustomsDeclaration> getDeclarationOfSubmissionByLastMonth(String vatCode);
 }
