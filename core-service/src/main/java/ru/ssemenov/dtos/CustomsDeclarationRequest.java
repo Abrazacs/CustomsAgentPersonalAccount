@@ -22,20 +22,20 @@ import java.util.UUID;
 @AllArgsConstructor
 public class CustomsDeclarationRequest implements Serializable {
 
-    @NotBlank
+    @NotBlank(message = "Поле наименование грузоотправителя обязательно для заполнения")
     @Schema(description = "Наименование грузоотправителя", required = true, example = "Trade inc")
     private final String consignor;
 
-    @NotBlank
+    @NotBlank(message = "Поле ИНН грузополучателя обязательно для заполнения")
     @Schema(description = "ИНН грузополучателя", required = true, example = "7777777777")
     private final String vatCode;
 
-    @NotBlank
+    @NotBlank(message = "Поле данные по инвойсу обязательно для заполнения")
     @Schema(description = "Данные по инвойсу", required = true, example = "ab-234")
     private final String invoiceData;
 
     @Min(1)
-    @NotNull
+    @NotNull(message = "Поле фактурная стоимость груза обязательно для заполнения")
     @Schema(description = "Фактурная стоимость груза", required = true, example = "120000")
     private final BigDecimal goodsValue;
 }
