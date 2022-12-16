@@ -97,7 +97,7 @@ class CustomsDeclarationControllerImplTests {
     }
 
     @Test
-    public void addNewCustomsDeclarationErrorValidationTest() throws Exception {
+    public void addNewCustomsDeclarationValidationErrorTest() throws Exception {
         CustomsDeclarationRequest declarationRequest = CustomsDeclarationRequest.builder()
                 .vatCode("7777777777")
                 .invoiceData("sv-124")
@@ -113,7 +113,7 @@ class CustomsDeclarationControllerImplTests {
                 .andDo(print())
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.violations[0].fieldName", is("consignor")))
-                .andExpect(jsonPath("$.violations[0].message", is("must not be blank")));
+                .andExpect(jsonPath("$.violations[0].message", is("Поле наименование грузоотправителя обязательно для заполнения")));
     }
 
     @Test
