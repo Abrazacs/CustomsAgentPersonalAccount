@@ -108,7 +108,7 @@ public class CustomsDeclarationServicesImpl implements CustomsDeclarationService
                 .averageDeclarationTimeOfReleaseByLastMonth(averageDeclarationTimeOfReleaseByLastMonth(customsDeclarationsByLastMonth))
                 .percentDeclarationFirstHalfOfTheDay(percentDeclarationFirstHalfOfTheDay(customsDeclarationsByLastMonth))
                 .percentDeclarationIssuedWithOneDayOfMonth(percentDeclarationIssuedWithOneDayOfMonth(customsDeclarationsByLastMonth, totalDeclarations))
-                .quantityDeclarationInwWork(quantityDeclarationInWork(totalDeclarations))
+                .quantityDeclarationInWork(quantityDeclarationInWork(totalDeclarations))
                 .build();
     }
 
@@ -130,19 +130,19 @@ public class CustomsDeclarationServicesImpl implements CustomsDeclarationService
         long countCustomDeclaration = customsDeclarationsByLastMonth.stream()
                 .filter(c -> c.getDateOfSubmission().getHour() < 12)
                 .count();
-        return (int) countCustomDeclaration/customsDeclarationsByLastMonth.size();
+        return (int) (countCustomDeclaration/customsDeclarationsByLastMonth.size())*100;
     }
 
     private Integer percentDeclarationIssuedWithOneDayOfMonth(List<CustomsDeclaration> customsDeclarationsByLastMonth,
                                                               List<CustomsDeclaration> totalDeclarations) {
-        return customsDeclarationsByLastMonth.size()/totalDeclarations.size();
+        return (customsDeclarationsByLastMonth.size()/totalDeclarations.size())*100;
     }
 
     private Integer quantityDeclarationInWork(List<CustomsDeclaration> customsDeclarationsAll) {
         long countCustomsDeclarationNoRelease = customsDeclarationsAll.stream()
                 .filter(not(c -> c.getStatus().equals("RELEASE") || c.getStatus().equals("RELEASE_DENIED")))
                 .count();
-        return (int) countCustomsDeclarationNoRelease/customsDeclarationsAll.size();
+        return (int) (countCustomsDeclarationNoRelease/customsDeclarationsAll.size())*100;
     }
 
     private StatisticsResponse buildZeroStatistic() {
@@ -150,7 +150,7 @@ public class CustomsDeclarationServicesImpl implements CustomsDeclarationService
                 .averageDeclarationTimeOfReleaseByLastMonth("N/A")
                 .percentDeclarationFirstHalfOfTheDay(0)
                 .percentDeclarationIssuedWithOneDayOfMonth(0)
-                .quantityDeclarationInwWork(0)
+                .quantityDeclarationInWork(0)
                 .build();
     }
 
