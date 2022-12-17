@@ -131,9 +131,20 @@ public class CustomsDeclarationControllerImpl implements CustomsDeclarationContr
         return new ResponseEntity<>("Декларация c id:" + id + " была успешно удалена", HttpStatus.OK);
     }
 
+    @Operation(
+            summary = "Запрос на получуние статистики за предыдущий месяц",
+            responses = {
+                    @ApiResponse(
+                            description = "Успешный ответ", responseCode = "200",
+                            content = @Content(schema = @Schema(implementation = StatisticsResponse.class))
+                    )
+            }
+    )
     @GetMapping("/statistic")
-    public StatisticsResponse getStatisticsByLastMonth() {
-        return customsDeclarationServices.getStatistics();
+    @ResponseStatus(HttpStatus.OK)
+    public StatisticsResponse getStatisticsByLastMonth(
+            @RequestHeader @Parameter(description = "ИНН компании", required = true) String vatCode) {
+        return customsDeclarationServices.getStatistics(vatCode);
     }
 
     @Override
