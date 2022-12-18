@@ -17,6 +17,6 @@ public class StatisticsResponse {
     private Integer percentDeclarationIssuedWithOneDayOfMonth;
 
     @Schema(description = "Кол-во ДТ в работе", required = true)
-    private Integer quantityDeclarationInwWork;
+    private Integer quantityDeclarationInWork;
 
 }

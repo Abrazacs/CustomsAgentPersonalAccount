@@ -1,12 +1,44 @@
-<div ng-controller="accountController">
+<div ng-controller="accountController" xmlns="http://www.w3.org/1999/html">
     <p>Добро пожаловать в личный кабинет</p>
     <p></p>
 
-    <p>Кол-во деклараций в работе: <span>{{s.inProgress}}</span > </p>
-    <p>% ДТ со сроком выпуска >1 дня: </span>{{s.moreThanOne}}</span> </p>
+    <div class="statistic" style="display: flex; justify-content: space-between">
 
-    <p></p>
-    <h3>Список ДТ</h3>
+        <div class="card" style="width: 18rem; justify-content: center">
+            <div class="card-body" style="justify-content: center">
+                <h4 class="card-title" style="text-align: center">Кол-во ДТ в работе:</h4>
+            </div>
+            <h2 style="text-align: center">{{statistic.quantityDeclarationInWork}}</h2>
+        </div>
+
+        <div class="card" style="width: 18rem; justify-content: center">
+            <div class="card-body" style="justify-content: center">
+                <h4 class="card-title" style="text-align: center">% ДТ со сроком выпуска не более 1 дня:</h4>
+            </div>
+            <h2 style="text-align: center">{{statistic.percentDeclarationIssuedWithOneDayOfMonth}} %</h2>
+        </div>
+
+        <div class="card" style="width: 18rem; justify-content: center">
+            <div class="card-body" style="justify-content: center">
+                <h4 class="card-title" style="text-align: center">% ДТ поданных до 12:00:</h4>
+            </div>
+            <h2 style="text-align: center">{{statistic.percentDeclarationFirstHalfOfTheDay}} %</h2>
+        </div>
+
+        <div class="card" style="width: 18rem; justify-content: center" >
+            <div class="card-body" style="justify-content: center">
+                <h4 class="card-title" style="text-align: center">Средний срок выпуска ДТ:</h4>
+            </div>
+            <h2 style="text-align: center">{{statistic.averageDeclarationTimeOfReleaseByLastMonth}}</h2>
+        </div>
+
+    </div>
+    <h2></h2>
+
+    <div style="display: flex; justify-content: space-between">
+        <h3>Список ДТ</h3>
+        <button type="button" class="btn btn-outline-success" ng-click=download()>Download</button>
+    </div>
     <p></p>
 
     <table class="table">
@@ -41,5 +73,7 @@
             </li>
         </ul>
     </nav>
+
+
 
 </div>
