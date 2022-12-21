@@ -34,7 +34,7 @@ public class MailServiceImpl implements MailService {
     public List<String> editMailingList(String vatCode, List<String> emails) {
         UUID trace = UUID.randomUUID();
         log.info("Start edit mailing list for vat={}, emails={}, trace={}", vatCode, emails, trace);
-        List<String> validateEmails = emails.stream().filter(this::emailValidate).collect(Collectors.toList());
+        List<String> validateEmails = emails.stream().filter(this::isValidEmail).collect(Collectors.toList());
         redisTemplate.opsForValue().set(vatCode, validateEmails);
         log.info("Edit mailing list for vat={} is done, validateEmails={}, trace={}", vatCode, emails, trace);
         return validateEmails;
@@ -54,7 +54,7 @@ public class MailServiceImpl implements MailService {
         }
     }
 
-    private boolean emailValidate(String emailAddress) {
+    private boolean isValidEmail(String emailAddress) {
         return Pattern.compile("^(?=.{1,64}@)[A-Za-z0-9_-]+(\\.[A-Za-z0-9_-]+)*@"
                         + "[^-][A-Za-z0-9-]+(\\.[A-Za-z0-9-]+)*(\\.[A-Za-z]{2,})$")
                 .matcher(emailAddress)

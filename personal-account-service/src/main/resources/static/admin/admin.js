@@ -16,7 +16,17 @@ angular.module('account').controller('adminController',function ($scope, $http) 
                         $scope.getAllUsers();
                     },
                     function errorCallback(response) {
-                    alert("заполните все поля и выберите роли")
+                    let msg = ''
+                    let violations = response.data.violations;
+                    if(violations !== null){
+                        violations.forEach(v => {
+                            msg = msg+v.message+"\n"
+                            console.log(msg)
+                        })
+                    }else {
+                        msg = response.data.message
+                    }
+                        alert(msg)
                     })
         }
 

@@ -20,6 +20,7 @@ import ru.ssemenov.converters.PageConverter;
 import ru.ssemenov.dtos.CustomsDeclarationRequest;
 import ru.ssemenov.dtos.CustomsDeclarationResponse;
 import ru.ssemenov.dtos.PageDto;
+import ru.ssemenov.dtos.StatisticsResponse;
 import ru.ssemenov.entities.CustomsDeclaration;
 import ru.ssemenov.exceptions.AppError;
 import ru.ssemenov.exceptions.ResourceException;
@@ -29,6 +30,7 @@ import javax.validation.Valid;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.net.URI;
 import java.util.UUID;
 
 @RestController
@@ -103,9 +105,11 @@ public class CustomsDeclarationControllerImpl implements CustomsDeclarationContr
     )
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<String> addNewCustomsDeclaration(@Valid @RequestBody @Parameter(description = "Данные по таможенной декларации", required = true) CustomsDeclarationRequest customsDeclarationRequest) {
-        customsDeclarationServices.addCustomsDeclaration(customsDeclarationRequest);
-        return new ResponseEntity<>("Декларация была успешно добавлена", HttpStatus.CREATED);
+    public ResponseEntity<UUID> addNewCustomsDeclaration(@Valid @RequestBody @Parameter(description = "Данные по таможенной декларации", required = true) CustomsDeclarationRequest customsDeclarationRequest) {
+        UUID id = customsDeclarationServices.addCustomsDeclaration(customsDeclarationRequest);
+        return ResponseEntity
+                .created(URI.create(String.format("/%s", id)))
+                .body(id);
     }
 
     @Override
@@ -127,6 +131,21 @@ public class CustomsDeclarationControllerImpl implements CustomsDeclarationContr
         return new ResponseEntity<>("Декларация c id:" + id + " была успешно удалена", HttpStatus.OK);
     }
 
+    @Operation(
+            summary = "Запрос на получуние статистики за предыдущий месяц",
+            responses = {
+                    @ApiResponse(
+                            description = "Успешный ответ", responseCode = "200",
+                            content = @Content(schema = @Schema(implementation = StatisticsResponse.class))
+                    )
+            }
+    )
+    @GetMapping("/statistic")
+    @ResponseStatus(HttpStatus.OK)
+    public StatisticsResponse getStatisticsByLastMonth(
+            @RequestHeader @Parameter(description = "ИНН компании", required = true) String vatCode) {
+        return customsDeclarationServices.getStatistics(vatCode);
+    }
 
     @Override
     @Operation(

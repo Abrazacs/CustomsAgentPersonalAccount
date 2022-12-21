@@ -1,4 +1,6 @@
-angular.module('account').controller('accountController', function ($scope, $http) {
+angular
+    .module('account')
+    .controller('accountController', function ($scope, $http) {
 
     $scope.loadDeclarations = function (page = 1) {
         $http({
@@ -13,6 +15,13 @@ angular.module('account').controller('accountController', function ($scope, $htt
         });
     }
 
+    $scope.loadStatistic = function () {
+        $http.get('http://localhost:5555/core/api/v1/declarations/statistic')
+        .then(function (response) {
+            $scope.statistic = response.data;
+        });
+    }
+
     $scope.generatePagesList = function (totalPages) {
         out = [];
         for (let i = 0; i < totalPages; i++) {
@@ -21,6 +30,19 @@ angular.module('account').controller('accountController', function ($scope, $htt
         $scope.pagesList = out;
     }
 
+    // $scope.download =function (){
+    //     $http.get('http://localhost:5555/core/api/v1/declarations/export')
+    //         .then(function (result){
+    //
+    //     });
+    // }
+
+    $scope.refresh = function (){
+        $scope.loadDeclarations()
+        $scope.loadStatistic()
+    }
+
     $scope.loadDeclarations()
+    $scope.loadStatistic()
 
 });
