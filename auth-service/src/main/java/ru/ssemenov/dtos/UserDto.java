@@ -16,21 +16,21 @@ import java.util.List;
 @Builder
 public class UserDto {
 
-    @NotBlank
+    @NotBlank (message = "Поле логин обязательно для заполнения")
     @Schema(description = "логин пользователя", required = true)
     private String username;
 
-    @NotBlank
+    @NotBlank (message = "Поле пароль не должно быть пустым")
     @Schema(description = "пароль", required = true)
     private String password;
 
-    @NotBlank
-    @Email
-    @NotBlank
+
+    @Email (message = "Поле e-mail должно соотвествовать формату mail@mail.com")
+    @NotBlank (message = "Поле e-mail не должно быть пустым")
     @Schema(description = "email", required = true, example = "mail@mail.com")
     private String email;
 
-    @NotEmpty(message = "необходимо выбрать роль")
+    @NotEmpty(message = "Необходимо выбрать роль")
     @Schema(description = "список ролей пользователя", required = true)
     private List<String> rolesNames;
 }
