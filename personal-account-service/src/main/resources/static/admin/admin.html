@@ -27,10 +27,11 @@
                 </tr>
                 </tbody>
             </table>
+
         </div>
 
-        <div class="noobs" style="width: 40%; border-style: solid; border-color: black; margin: 10px">
-
+        <div class="noobs" style="width: 40%">
+            <div style="border-style: solid; border-color: black; margin: 10px">
             <p>Форма регистрации нового пользователя</p>
             <form class="form-check" ng-submit="addUser()">
                 <div>
@@ -57,12 +58,46 @@
                         <label class="form-check-label" for="flexCheckChecked">Пользователь</label>
                     </div>
                     </p>
-                    <button id="navLoginSubmit" class="btn btn-outline-warning btn-sm"
+                    <button id="navUserSubmit" class="btn btn-outline-warning btn-sm"
                             style="margin-left: 10px;" type="submit">Добавить пользователя
                     </button>
                     </p>
                 </div>
             </form>
+            </div>
+            <div style="border-style: solid; border-color: black; margin: 10px">
+                <p>Список рассылки уведомлений:</p>
+                <table class="table">
+                    <thead class="table table-bordered">
+                    <tr>
+                        <td>email</td>
+                        <td></td>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="n in notifyList">
+                        <td>{{n}}</td>
+                        <td>
+                            <button class="btn btn-outline-warning" ng-click="removeFromNotification(n)">
+                                Удалить пользователя
+                            </button>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+                <form class="form-check" ng-submit="addToNotificationList()" style="display: flex; justify-content: space-between">
+                    <input id="emailField" class="form-control mx-sm-3" ng-model="recipient" type="email"
+                           aria-describedby="inputGroup-sizing-sm" style="width: 50%" placeholder="email">
+                    <button id="navNotificationSubmit" class="btn btn-outline-warning btn-sm"
+                            type="submit"> Добавить
+                    </button>
+                    </button>
+
+                </form>
+
+            </div>
+        </div>
+        </p>
         </div>
 
     </div>
