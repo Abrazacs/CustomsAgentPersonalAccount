@@ -8,6 +8,7 @@ angular
             method: 'GET',
             params: {
                 page: page,
+                numberPart: $scope.filter ? $scope.filter.numberPart : null
             }
         }).then(function (response) {
             $scope.declarationPage = response.data;

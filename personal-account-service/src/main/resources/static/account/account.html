@@ -43,6 +43,15 @@
     </div>
     <p></p>
 
+    <form novalidate ng-submit="loadDeclarations()">
+        <div class="form-floating input-group-sm">
+            <input type="text" class="form-control" id="numberPartFilter" placeholder="введите номер" ng-model="filter.numberPart">
+            <label for="numberPartFilter">Номер декларации</label>
+        </div>
+        <p></p>
+        <button class="btn btn-outline-warning btn-sm" style="width: 100%;" type="submit">Найти</button>
+    </form>
+
     <table class="table">
         <thead class="table-dark">
         <tr>
