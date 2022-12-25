@@ -14,11 +14,11 @@ import javax.validation.constraints.NotBlank;
 @Setter
 public class JwtRequest {
 
-    @NotBlank
+    @NotBlank (message = "Необходимо заполнить логин")
     @Schema(description = "логин пользователя", required = true)
     private String username;
 
-    @NotBlank
+    @NotBlank (message = "Укажите пароль")
     @Schema(description = "пароль", required = true)
     private String password;
 }

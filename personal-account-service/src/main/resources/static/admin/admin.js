@@ -1,6 +1,7 @@
 angular.module('account').controller('adminController',function ($scope, $http) {
 
     var roles = [];
+    var emails = [];
 
         $scope.getAllUsers = function () {
             $http.get('http://localhost:5555/auth/api/v1/secure/users')
@@ -32,9 +33,25 @@ angular.module('account').controller('adminController',function ($scope, $http) 
 
         $scope.removeUser = function (id){
             $http.delete('http://localhost:5555/auth/api/v1/secure/'+id)
-                .then(function successCallback(response) {
+                .then(function successCallback() {
                         $scope.getAllUsers();
                     })
+        }
+
+        $scope.getNotificationList = function (){
+            $http.get('http://localhost:5555/notification/api/v1/notification')
+                .then(function (response){
+                    $scope.notifyList = response.data
+                    emails = response.data
+            })
+        }
+
+        $scope.addToNotificationList = function (){
+            emails.push($scope.recipient)
+            $http.post('http://localhost:5555/notification/api/v1/notification',emails)
+                .then(function successCallback(){
+                    $scope.getNotificationList()
+                })
         }
 
         $scope.collectTheRoles = function (role){
@@ -55,6 +72,8 @@ angular.module('account').controller('adminController',function ($scope, $http) 
             }
         }
 
+
         $scope.getAllUsers()
+        $scope.getNotificationList()
 
 });

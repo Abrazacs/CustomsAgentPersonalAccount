@@ -132,7 +132,7 @@ public class CustomsDeclarationControllerImpl implements CustomsDeclarationContr
     }
 
     @Operation(
-            summary = "Запрос на получуние статистики за предыдущий месяц",
+            summary = "Запрос на получение статистики за предыдущий месяц",
             responses = {
                     @ApiResponse(
                             description = "Успешный ответ", responseCode = "200",
