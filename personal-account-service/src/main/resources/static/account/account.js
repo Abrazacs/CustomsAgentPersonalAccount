@@ -55,6 +55,7 @@ angular
 
 
     $scope.refresh = function (){
+        $scope.filter = null;
         $scope.loadDeclarations()
         $scope.loadStatistic()
     }
