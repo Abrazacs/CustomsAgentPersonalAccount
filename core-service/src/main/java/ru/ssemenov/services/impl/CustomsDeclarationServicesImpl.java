@@ -38,6 +38,12 @@ public class CustomsDeclarationServicesImpl implements CustomsDeclarationService
 
     private final ExcelFileWriter excelFileWriter;
     private final CustomsDeclarationRepository customsDeclarationRepository;
+    private final static StatisticsResponse ZERO_STATISTIC = StatisticsResponse.builder()
+            .averageDeclarationTimeOfReleaseByLastMonth("N/A")
+            .percentDeclarationFirstHalfOfTheDay(0)
+            .percentDeclarationIssuedWithOneDayOfMonth(0)
+            .quantityDeclarationInWork(0)
+            .build();
 
     @Override
     public CustomsDeclaration findById(UUID id) {
@@ -98,11 +104,11 @@ public class CustomsDeclarationServicesImpl implements CustomsDeclarationService
     public StatisticsResponse getStatistics(String vatCode) {
         List<CustomsDeclaration> totalDeclarations = customsDeclarationRepository.findAllByVatCode(vatCode);
         if(totalDeclarations.isEmpty()){
-            return buildZeroStatistic();
+            return ZERO_STATISTIC;
         }
         List<CustomsDeclaration> customsDeclarationsByLastMonth = customsDeclarationRepository.getDeclarationOfSubmissionByLastMonth(vatCode);
         if(customsDeclarationsByLastMonth.isEmpty()){
-            return buildZeroStatistic();
+            return ZERO_STATISTIC;
         }
         return StatisticsResponse.builder()
                 .averageDeclarationTimeOfReleaseByLastMonth(averageDeclarationTimeOfReleaseByLastMonth(customsDeclarationsByLastMonth))
@@ -143,15 +149,6 @@ public class CustomsDeclarationServicesImpl implements CustomsDeclarationService
                 .filter(not(c -> c.getStatus().equals("RELEASE") || c.getStatus().equals("RELEASE_DENIED")))
                 .count();
         return (int) (countCustomsDeclarationNoRelease/customsDeclarationsAll.size())*100;
-    }
-
-    private StatisticsResponse buildZeroStatistic() {
-        return StatisticsResponse.builder()
-                .averageDeclarationTimeOfReleaseByLastMonth("N/A")
-                .percentDeclarationFirstHalfOfTheDay(0)
-                .percentDeclarationIssuedWithOneDayOfMonth(0)
-                .quantityDeclarationInWork(0)
-                .build();
     }
 
 }

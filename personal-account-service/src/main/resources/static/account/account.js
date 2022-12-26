@@ -8,6 +8,7 @@ angular
             method: 'GET',
             params: {
                 page: page,
+                numberPart: $scope.filter ? $scope.filter.numberPart : null
             }
         }).then(function (response) {
             $scope.declarationPage = response.data;
@@ -30,14 +31,31 @@ angular
         $scope.pagesList = out;
     }
 
-    // $scope.download =function (){
-    //     $http.get('http://localhost:5555/core/api/v1/declarations/export')
-    //         .then(function (result){
-    //
-    //     });
-    // }
+    $scope.download =function () {
+        $http({
+            method: 'GET',
+            url: 'http://localhost:5555/core/api/v1/declarations/export',
+            responseType: 'arraybuffer'
+        }) .then(function(response){
+            console.log(response.data);
+            var blob = new Blob([response.data], {type: 'application'});
+            saveAs(blob, 'statistic.xlsx');
+        })
+
+    }
+
+    function saveAs(blob, fileName){
+        var url = window.URL.createObjectURL(blob);
+        var doc = document.createElement("a");
+        doc.href = url;
+        doc.download = fileName;
+        doc.click();
+        window.URL.revokeObjectURL(url);
+    }
+
 
     $scope.refresh = function (){
+        $scope.filter = null;
         $scope.loadDeclarations()
         $scope.loadStatistic()
     }

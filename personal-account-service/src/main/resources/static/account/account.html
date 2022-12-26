@@ -1,4 +1,4 @@
-<div ng-controller="accountController" xmlns="http://www.w3.org/1999/html">
+<div class="container" ng-controller="accountController" xmlns="http://www.w3.org/1999/html">
     <p>Добро пожаловать в личный кабинет</p>
     <p></p>
 
@@ -25,7 +25,7 @@
             <h2 style="text-align: center">{{statistic.percentDeclarationFirstHalfOfTheDay}} %</h2>
         </div>
 
-        <div class="card" style="width: 18rem; justify-content: center" >
+        <div class="card" style="width: 18rem; justify-content: center">
             <div class="card-body" style="justify-content: center">
                 <h4 class="card-title" style="text-align: center">Средний срок выпуска ДТ:</h4>
             </div>
@@ -33,13 +33,28 @@
         </div>
 
     </div>
-    <h2></h2>
+
+    <p></p>
+    <p></p>
 
     <div style="display: flex; justify-content: space-between">
         <h3>Список ДТ</h3>
         <button type="button" class="btn btn-outline-success" ng-click=download()>Download</button>
     </div>
     <p></p>
+
+    <div class="col-12 mt-3">
+        <form class="form-inline" novalidate ng-submit="loadDeclarations()">
+            <div class="form-group mb-2 mr-2">
+                <label for="numberPartFilter" style="margin-right: 5px">Поиск по номеру</label>
+                <input type="text" class="form-control" id="numberPartFilter" placeholder="введите номер"
+                       ng-model="filter.numberPart">
+            </div>
+            <button class="btn btn-primary mb-2" type="submit">Найти</button>
+            <label for="numberPartFilter" style="margin-left: 5px">* достаточно указать фрагмент номера
+                документа. "Refresh" вернет общий список</label>
+        </form>
+    </div>
 
     <table class="table">
         <thead class="table-dark">
@@ -66,14 +81,16 @@
         </tbody>
     </table>
 
-    <nav aria-label="Page navigation">
-        <ul class="pagination">
-            <li class="page-item" ng-repeat="pageIndex in pagesList">
-                <button class="page-link" ng-click="loadProducts(pageIndex)">{{pageIndex}}</button>
-            </li>
-        </ul>
-    </nav>
+    <div style="display: flex; justify-content: space-between">
+        <nav aria-label="Page navigation">
+            <ul class="pagination">
+                <li class="page-item" ng-repeat="pageIndex in pagesList">
+                    <button class="page-link" ng-click="loadProducts(pageIndex)">{{pageIndex}}</button>
+                </li>
+            </ul>
+        </nav>
 
-
+        <button type="button" class="btn btn-outline-primary btn-sm" ng-click="refresh()">Refresh</button>
+    </div>
 
 </div>

@@ -58,8 +58,17 @@ angular.module('account').controller('indexController', function ($rootScope, $s
                     $location.path('/account');
                 }
             }, function errorCallback(response) {
-                $scope.errorData = response.data;
-                alert($scope.errorData.message)
+                let msg = ''
+                let violations = response.data.violations;
+                if(violations !== null){
+                    violations.forEach(v => {
+                        msg = msg+v.message+"\n"
+                        console.log(msg)
+                    })
+                }else {
+                    msg = response.data.message
+                }
+                alert(msg)
             });
     };
 
