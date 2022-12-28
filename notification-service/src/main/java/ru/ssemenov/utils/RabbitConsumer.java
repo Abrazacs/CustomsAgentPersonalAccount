@@ -29,7 +29,7 @@ public class RabbitConsumer {
         }catch (Exception e){
             log.info("Error occurred while trying to send the message, trace={} ", trace);
         }
-        System.out.println(msg);
+
     }
 
 }
