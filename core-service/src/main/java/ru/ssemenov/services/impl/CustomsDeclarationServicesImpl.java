@@ -22,7 +22,6 @@ import ru.ssemenov.utils.CustomsDeclarationStatusEnum;
 import ru.ssemenov.utils.ExcelFileWriter;
 import ru.ssemenov.utils.NotificationProducer;
 
-
 import java.time.LocalTime;
 import java.util.*;
 import java.io.File;
@@ -30,7 +29,6 @@ import java.util.List;
 import java.util.UUID;
 
 import static java.util.function.Predicate.not;
-
 
 @Slf4j
 @Service
@@ -169,7 +167,7 @@ public class CustomsDeclarationServicesImpl implements CustomsDeclarationService
                         .vatCode(declaration.getVatCode())
                         .message(
                                 String.format("Статус декларации %s изменен на %s", declaration.getNumber(),
-                                CustomsDeclarationStatusEnum.valueOf(declaration.getStatus()).getRusName()))
+                                        CustomsDeclarationStatusEnum.valueOf(declaration.getStatus()).getRusName()))
                         .build());
             }
         }
