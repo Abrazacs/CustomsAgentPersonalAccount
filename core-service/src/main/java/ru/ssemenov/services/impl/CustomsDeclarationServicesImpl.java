@@ -10,6 +10,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import ru.ssemenov.dtos.CustomsDeclarationRequest;
+import ru.ssemenov.dtos.Notification;
 import ru.ssemenov.dtos.StatisticsResponse;
 import ru.ssemenov.entities.CustomsDeclaration;
 import ru.ssemenov.exceptions.ResourceException;
@@ -163,8 +164,13 @@ public class CustomsDeclarationServicesImpl implements CustomsDeclarationService
             case "RELEASE":
             case "RELEASE_DENIED":
             case "REGISTERED": {
-                String message = declaration.getVatCode() + " " + declaration.getNumber() + " " + CustomsDeclarationStatusEnum.valueOf(declaration.getStatus()).getRusName();
-                notificationProducer.publishNotification(message);
+                notificationProducer.publishNotification(Notification
+                        .builder()
+                        .vatCode(declaration.getVatCode())
+                        .message(
+                                String.format("Статус декларации %s изменен на %s", declaration.getNumber(),
+                                CustomsDeclarationStatusEnum.valueOf(declaration.getStatus()).getRusName()))
+                        .build());
             }
         }
     }
