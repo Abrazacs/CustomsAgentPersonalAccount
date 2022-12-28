@@ -61,7 +61,7 @@ public class CustomsDeclarationServicesImpl implements CustomsDeclarationService
     }
 
     @Override
-    public void saveOrUpdate (CustomsDeclarationRequest customsDeclarationRequest) {
+    public void saveOrUpdate(CustomsDeclarationRequest customsDeclarationRequest) {
         UUID trace = UUID.randomUUID();
         log.info("Start save/update declaration declarationRequest={}, traceId={}", customsDeclarationRequest, trace);
         CustomsDeclaration customsDeclaration = convertRequestToDeclaration(customsDeclarationRequest);
@@ -111,11 +111,11 @@ public class CustomsDeclarationServicesImpl implements CustomsDeclarationService
     @Override
     public StatisticsResponse getStatistics(String vatCode) {
         List<CustomsDeclaration> totalDeclarations = customsDeclarationRepository.findAllByVatCode(vatCode);
-        if(totalDeclarations.isEmpty()){
+        if (totalDeclarations.isEmpty()) {
             return ZERO_STATISTIC;
         }
         List<CustomsDeclaration> customsDeclarationsByLastMonth = customsDeclarationRepository.getDeclarationOfSubmissionByLastMonth(vatCode);
-        if(customsDeclarationsByLastMonth.isEmpty()){
+        if (customsDeclarationsByLastMonth.isEmpty()) {
             return ZERO_STATISTIC;
         }
         return StatisticsResponse.builder()
@@ -128,46 +128,44 @@ public class CustomsDeclarationServicesImpl implements CustomsDeclarationService
 
     private String averageDeclarationTimeOfReleaseByLastMonth(List<CustomsDeclaration> customsDeclarationsByLastMonth) {
         OptionalDouble averageTimeSeconds = customsDeclarationsByLastMonth.stream()
-                .filter(c->c.getDateOfRelease()==null)
+                .filter(c -> c.getDateOfRelease() == null)
                 .map(c -> c.getDateOfRelease().toEpochSecond() - c.getDateOfSubmission().toEpochSecond())
                 .mapToLong(t -> t)
                 .average();
-        if(averageTimeSeconds.isPresent()) {
+        if (averageTimeSeconds.isPresent()) {
             return LocalTime.ofSecondOfDay((long) averageTimeSeconds.getAsDouble()).toString();
-        }else {
+        } else {
             return "N/A";
         }
     }
-    
+
     private Integer percentDeclarationFirstHalfOfTheDay(List<CustomsDeclaration> customsDeclarationsByLastMonth) {
         long countCustomDeclaration = customsDeclarationsByLastMonth.stream()
                 .filter(c -> c.getDateOfSubmission().getHour() < 12)
                 .count();
-        return (int) (countCustomDeclaration/customsDeclarationsByLastMonth.size())*100;
+        return (int) (countCustomDeclaration / customsDeclarationsByLastMonth.size()) * 100;
     }
 
     private Integer percentDeclarationIssuedWithOneDayOfMonth(List<CustomsDeclaration> customsDeclarationsByLastMonth,
                                                               List<CustomsDeclaration> totalDeclarations) {
-        return (customsDeclarationsByLastMonth.size()/totalDeclarations.size())*100;
+        return (customsDeclarationsByLastMonth.size() / totalDeclarations.size()) * 100;
     }
 
     private Integer quantityDeclarationInWork(List<CustomsDeclaration> customsDeclarationsAll) {
         long countCustomsDeclarationNoRelease = customsDeclarationsAll.stream()
                 .filter(not(c -> c.getStatus().equals("RELEASE") || c.getStatus().equals("RELEASE_DENIED")))
                 .count();
-        return (int) (countCustomsDeclarationNoRelease/customsDeclarationsAll.size())*100;
+        return (int) (countCustomsDeclarationNoRelease / customsDeclarationsAll.size()) * 100;
     }
 
-    private void notifyIfNeeded(CustomsDeclaration declaration){
-        switch (declaration.getStatus()){
-            case "RELEASE": case "RELEASE_DENIED": case "REGISTERED": {
-                String message = declaration.getVatCode()+" "+declaration.getNumber()+" "+ CustomsDeclarationStatusEnum.valueOf(declaration.getStatus()).getRusName();
+    private void notifyIfNeeded(CustomsDeclaration declaration) {
+        switch (declaration.getStatus()) {
+            case "RELEASE":
+            case "RELEASE_DENIED":
+            case "REGISTERED": {
+                String message = declaration.getVatCode() + " " + declaration.getNumber() + " " + CustomsDeclarationStatusEnum.valueOf(declaration.getStatus()).getRusName();
                 notificationProducer.publishNotification(message);
             }
         }
     }
-
-
-
-
 }
