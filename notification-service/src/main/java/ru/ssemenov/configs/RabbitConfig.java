@@ -12,7 +12,7 @@ import org.springframework.context.annotation.Configuration;
 @AllArgsConstructor
 public class RabbitConfig {
 
-    private final static String QUEUE = "Notifications";
+    public final static String NOTIFICATION_QUEUE = "notifications";
 
     @Bean
     public CachingConnectionFactory connectionFactory() {
@@ -29,4 +29,8 @@ public class RabbitConfig {
         return new RabbitTemplate(connectionFactory());
     }
 
+    @Bean
+    public Queue myQueue() {
+        return new Queue(NOTIFICATION_QUEUE, false);
+    }
 }

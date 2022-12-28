@@ -5,14 +5,11 @@ import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-
 @Configuration
 @AllArgsConstructor
 public class RabbitConfig {
-
     @Bean
-    ConnectionFactory connectionFactory(){
+    ConnectionFactory connectionFactory() {
         return new ConnectionFactory();
     }
-
 }
