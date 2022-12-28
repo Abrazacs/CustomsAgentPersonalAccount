@@ -6,7 +6,6 @@ import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.data.redis.RedisConnectionFailureException;
 import org.springframework.stereotype.Component;
 
-import redis.clients.jedis.exceptions.JedisException;
 import ru.ssemenov.dto.Notification;
 import ru.ssemenov.exceptions.MailException;
 import ru.ssemenov.services.impl.MailServiceImpl;
@@ -28,9 +27,8 @@ public class RabbitConsumer {
         UUID trace = UUID.randomUUID();
         try {
             mailService.notifyMailRecipients(notification.getVatCode(), TITLE, notification.getMessage());
-        } catch (MailException | RedisConnectionFailureException e){
-            log.error("Error while trying to send the message, trace={}, error message={}", trace, e.getMessage());
+        } catch (MailException | RedisConnectionFailureException e) {
+            log.error("Error while trying to send the email message, error={}, trace={}", e.getMessage(), trace);
         }
-
     }
 }

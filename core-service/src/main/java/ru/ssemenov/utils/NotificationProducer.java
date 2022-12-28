@@ -18,7 +18,7 @@ public class NotificationProducer {
 
     public void publishNotification(Notification notification) {
         UUID trace = UUID.randomUUID();
-        log.info("Start send message to notification, traceId={}", trace);
+        log.info("Start send message to notification, trace={}", trace);
         rabbitTemplate.convertAndSend(NOTIFICATION_QUEUE, notification);
         log.info("Message successfully published, trace={}", trace);
     }
