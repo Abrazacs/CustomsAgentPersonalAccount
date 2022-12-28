@@ -19,12 +19,12 @@ import ru.ssemenov.repositories.specifications.CustomsDeclarationSpecifications;
 import ru.ssemenov.services.CustomsDeclarationServices;
 import ru.ssemenov.utils.CustomsDeclarationStatusEnum;
 import ru.ssemenov.utils.ExcelFileWriter;
+import ru.ssemenov.utils.NotificationProducer;
 
 
 import java.time.LocalTime;
 import java.util.*;
 import java.io.File;
-import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -44,6 +44,7 @@ public class CustomsDeclarationServicesImpl implements CustomsDeclarationService
             .percentDeclarationIssuedWithOneDayOfMonth(0)
             .quantityDeclarationInWork(0)
             .build();
+    private final NotificationProducer notificationProducer;
 
     @Override
     public CustomsDeclaration findById(UUID id) {
@@ -60,25 +61,32 @@ public class CustomsDeclarationServicesImpl implements CustomsDeclarationService
     }
 
     @Override
-    public UUID addCustomsDeclaration(CustomsDeclarationRequest customsDeclarationRequest) {
+    public void saveOrUpdate (CustomsDeclarationRequest customsDeclarationRequest) {
         UUID trace = UUID.randomUUID();
-        log.info("Start save declaration declarationRequest={}, traceId={}", customsDeclarationRequest, trace);
-        CustomsDeclaration customsDeclaration = CustomsDeclaration.builder()
-                .status(CustomsDeclarationStatusEnum.FILED.name())
-                .consignor(customsDeclarationRequest.getConsignor())
-                .vatCode(customsDeclarationRequest.getVatCode())
-                .invoiceData(customsDeclarationRequest.getInvoiceData())
-                .goodsValue(customsDeclarationRequest.getGoodsValue())
-                .dateOfSubmission(OffsetDateTime.now())
-                .build();
+        log.info("Start save/update declaration declarationRequest={}, traceId={}", customsDeclarationRequest, trace);
+        CustomsDeclaration customsDeclaration = convertRequestToDeclaration(customsDeclarationRequest);
         try {
             CustomsDeclaration declaration = customsDeclarationRepository.save(customsDeclaration);
-            log.info("Declaration with id={} successfully saved, traceId={}", declaration.getId(), trace);
-            return declaration.getId();
+            notifyIfNeeded(declaration);
+            log.info("Declaration with id={} successfully saved/updated, traceId={}", declaration.getId(), trace);
         } catch (DataIntegrityViolationException e) {
-            log.error("Error save new declaration, error={}, traceId={}", e.getMessage(), trace);
+            log.error("Error save or update declaration, error={}, traceId={}", e.getMessage(), trace);
             throw new ResourceException("Декларация " + customsDeclarationRequest + " не сохранена!");
         }
+    }
+
+    private CustomsDeclaration convertRequestToDeclaration(CustomsDeclarationRequest request) {
+        return CustomsDeclaration.builder()
+                .id(request.getId())
+                .number(request.getNumber())
+                .status(request.getStatus())
+                .consignor(request.getConsignor())
+                .vatCode(request.getVatCode())
+                .invoiceData(request.getInvoiceData())
+                .goodsValue(request.getGoodsValue())
+                .dateOfSubmission(request.getDateOfSubmission())
+                .dateOfRelease(request.getDateOfRelease())
+                .build();
     }
 
     @Override
@@ -118,7 +126,6 @@ public class CustomsDeclarationServicesImpl implements CustomsDeclarationService
                 .build();
     }
 
-
     private String averageDeclarationTimeOfReleaseByLastMonth(List<CustomsDeclaration> customsDeclarationsByLastMonth) {
         OptionalDouble averageTimeSeconds = customsDeclarationsByLastMonth.stream()
                 .filter(c->c.getDateOfRelease()==null)
@@ -150,5 +157,17 @@ public class CustomsDeclarationServicesImpl implements CustomsDeclarationService
                 .count();
         return (int) (countCustomsDeclarationNoRelease/customsDeclarationsAll.size())*100;
     }
+
+    private void notifyIfNeeded(CustomsDeclaration declaration){
+        switch (declaration.getStatus()){
+            case "RELEASE": case "RELEASE_DENIED": case "REGISTERED": {
+                String message = declaration.getVatCode()+" "+declaration.getNumber()+" "+ CustomsDeclarationStatusEnum.valueOf(declaration.getStatus()).getRusName();
+                notificationProducer.publishNotification(message);
+            }
+        }
+    }
+
+
+
 
 }
