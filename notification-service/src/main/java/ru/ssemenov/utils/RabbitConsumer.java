@@ -3,6 +3,7 @@ package ru.ssemenov.utils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
+import org.springframework.data.redis.RedisConnectionFailureException;
 import org.springframework.stereotype.Component;
 
 import redis.clients.jedis.exceptions.JedisException;
@@ -27,7 +28,7 @@ public class RabbitConsumer {
         UUID trace = UUID.randomUUID();
         try {
             mailService.notifyMailRecipients(notification.getVatCode(), TITLE, notification.getMessage());
-        } catch (MailException | JedisException e){
+        } catch (MailException | RedisConnectionFailureException e){
             log.error("Error while trying to send the message, trace={}, error message={}", trace, e.getMessage());
         }
 
