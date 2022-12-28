@@ -38,4 +38,24 @@ public class CustomsDeclarationRequest implements Serializable {
     @NotNull(message = "Поле фактурная стоимость груза обязательно для заполнения")
     @Schema(description = "Фактурная стоимость груза", required = true, example = "120000")
     private final BigDecimal goodsValue;
+
+    @NotNull(message = "Поле статус не может быть пустым")
+    @Schema(description = "Статус декларации", required = true, example = "REGISTERED")
+    private final String status;
+
+    @NotNull(message = "Индентификационый номер ДТ обязателен")
+    @Schema(description = "Идентификационный номер ДТ", required = true, example = "ca26b177-dfdb-40c5-beaf-1e1672111e52")
+    private final UUID id;
+
+    @Schema(description = "Номер декларации", example = "10228010/031022/6543623")
+    private final String number;
+
+    @NotNull
+    @Schema(description = "Дата подачи ДТ", required = true, example = "2022-11-05T13:22:49+10:00")
+    private final OffsetDateTime dateOfSubmission;
+
+    @Schema(description = "Дата выпуска или отказа в выпуске ДТ", example = "2022-11-05T13:22:49+10:00")
+    private final OffsetDateTime dateOfRelease;
+
+
 }

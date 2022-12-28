@@ -14,12 +14,13 @@ public interface CustomsDeclarationServices {
 
     Page<CustomsDeclaration> findAll(String vatCode, Integer pageNo, Integer pageSize, String sortBy, String numberPart);
 
-    UUID addCustomsDeclaration(CustomsDeclarationRequest customsDeclarationRequest);
+    void saveOrUpdate(CustomsDeclarationRequest customsDeclarationRequest);
 
     void deleteById(UUID id);
 
     StatisticsResponse getStatistics(String vatCode);
 
     File export(String vatCode);
+
 
 }
