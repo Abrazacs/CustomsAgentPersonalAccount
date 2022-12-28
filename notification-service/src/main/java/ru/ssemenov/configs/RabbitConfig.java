@@ -16,7 +16,7 @@ public class RabbitConfig {
 
     @Bean
     public CachingConnectionFactory connectionFactory() {
-        return new CachingConnectionFactory();
+        return new CachingConnectionFactory("localhost");
     }
 
     @Bean
@@ -29,8 +29,4 @@ public class RabbitConfig {
         return new RabbitTemplate(connectionFactory());
     }
 
-    @Bean
-    public Queue myQueue() {
-        return new Queue(QUEUE, false);
-    }
 }
