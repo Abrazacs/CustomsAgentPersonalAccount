@@ -14,7 +14,7 @@ public interface CustomsDeclarationController {
 
     CustomsDeclarationResponse getCustomsDeclarationById(UUID id);
 
-    ResponseEntity<UUID> addNewCustomsDeclaration(CustomsDeclarationRequest customsDeclarationRequest);
+    void addNewCustomsDeclaration(CustomsDeclarationRequest customsDeclarationRequest);
 
     ResponseEntity<String> deleteCustomsDeclarationById(UUID id);
 

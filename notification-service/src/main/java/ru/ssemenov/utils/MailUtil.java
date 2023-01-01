@@ -52,7 +52,7 @@ public class MailUtil {
             msg.setFrom(new InternetAddress("no_reply@ssemenov.com", "NoReply-SSemenov"));
             msg.setReplyTo(InternetAddress.parse("no_reply@ssemenov.com", false));
             msg.setSubject(subject, "UTF-8");
-            msg.setContent(String.format("<h1>%s</h1>", body), "text/html");
+            msg.setContent(String.format("<h1>%s</h1>", body), "text/html; charset=UTF-8");
             msg.setSentDate(new Date());
             msg.setRecipients(Message.RecipientType.TO, InternetAddress.parse(toEmail, false));
             log.info("Message for email={} is ready, trace={}", toEmail, trace);
